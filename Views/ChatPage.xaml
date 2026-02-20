@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="MauMind.App.Views.ChatPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Chat"
+    Background="{AppThemeBinding Light={StaticResource BackgroundGradientLight}, Dark={StaticResource DarkBackground}}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Premium Header with Glass Effect -->
+        <Frame Grid.Row="0" Margin="16,16,16,8" CornerRadius="20" Padding="16,12"
+               Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+               HasShadow="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- AI Avatar -->
+                <Frame Grid.Column="0" WidthRequest="44" HeightRequest="44" CornerRadius="22"
+                       Background="{StaticResource PrimaryButtonGradient}" Padding="0">
+                    <Label Text="M" FontSize="20" FontAttributes="Bold" TextColor="White"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Frame>
+                
+                <!-- Title & Status -->
+                <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="12,0">
+                    <Label Text="MauMind AI" Style="{StaticResource CardTitle}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                    <Label Text="{Binding StatusMessage}" Style="{StaticResource CaptionText}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+                </StackLayout>
+                
+                <!-- Settings Icon -->
+                <Button Grid.Column="2" Text="⚙" FontSize="18" Style="{StaticResource IconButton}"
+                        BackgroundColor="Transparent" Clicked="OnSettingsClicked"/>
+            </Grid>
+        </Frame>
+
+        <!-- Chat Messages Area -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always" Padding="16,8">
+            <StackLayout x:Name="MessagesStack" Spacing="12">
+                <!-- Empty State -->
+                <StackLayout x:Name="ChatEmptyState" 
+                             VerticalOptions="Center" 
+                             HorizontalOptions="Center" 
+                             Margin="20,60,20,20"
+                             Spacing="16">
+                    <StackLayout HorizontalOptions="Center">
+                        <!-- Premium Icon with Glow -->
+                        <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50"
+                               Background="{AppThemeBinding Light=#E3F2FD, Dark=#1E3A5F}"
+                               HorizontalOptions="Center" Padding="0">
+                            <Label Text="✨" FontSize="42" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        
+                        <Label Text="Welcome to MauMind" 
+                               Style="{StaticResource PageTitle}"
+                               HorizontalOptions="Center" Margin="0,16,0,8"/>
+                        
+                        <Label Text="Your private AI assistant that keeps&#x0a;all data on your device" 
+                               Style="{StaticResource SecondaryText}"
+                               HorizontalOptions="Center" 
+                               HorizontalTextAlignment="Center"
+                               Margin="0,0,0,20"/>
+                        
+                        <!-- Premium CTA Button -->
+                        <Button Text="Start Chatting →" 
+                                Style="{StaticResource PrimaryButton}"
+                                HorizontalOptions="Center"
+                                Clicked="OnSampleQuestionClicked"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Premium Floating Input Bar -->
+        <Grid Grid.Row="2" Margin="16,8,16,20">
+            <Frame CornerRadius="28" Padding="4"
+                   Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+                   HasShadow="True">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                    <!-- Voice Button -->
+                    <Button Grid.Column="0"
+                            x:Name="VoiceButton"
+                            Text="🎤"
+                            FontSize="18"
+                            Clicked="OnVoiceClicked"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource PrimaryBlue}"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            CornerRadius="24"/>
+                    
+                    <!-- Text Input -->
+                    <Entry Grid.Column="1"
+                           x:Name="MessageEntry"
+                           Text="{Binding UserInput, Mode=TwoWay}"
+                           Placeholder="Type your message..."
+                           VerticalOptions="Center"
+                           BackgroundColor="Transparent"
+                           FontSize="15"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
+                           PlaceholderColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
+                           Margin="4,0"/>
+                    
+                    <!-- Cancel Button (shown when processing) -->
+                    <Button Grid.Column="2"
+                            Text="✕"
+                            FontSize="14"
+                            Clicked="OnCancelClicked"
+                            IsVisible="{Binding IsProcessing}"
+                            BackgroundColor="#20000000"
+                            TextColor="{StaticResource ErrorRed}"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            CornerRadius="20"
+                            Margin="4,0"/>
+                    
+                    <!-- Send Button with Gradient -->
+                    <Button Grid.Column="3"
+                            x:Name="SendButton"
+                            Text="➤"
+                            FontSize="16"
+                            Clicked="OnSendClicked"
+                            Background="{StaticResource PrimaryButtonGradient}"
+                            TextColor="White"
+                            WidthRequest="48"
+                            HeightRequest="48"
+                            CornerRadius="24"
+                            Margin="4,0,0,0"/>
+                </Grid>
+            </Frame>
+        </Grid>
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,22 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauMind.App"
+             xmlns:helpers="clr-namespace:MauMind.App.Helpers"
+             x:Class="MauMind.App.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/Styles/GlassStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Converters -->
+            <helpers:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            <helpers:IsNullConverter x:Key="IsNullConverter"/>
+            <helpers:NotNullConverter x:Key="NotNullConverter"/>
+            <helpers:SuggestionTypeColorConverter x:Key="SuggestionTypeColorConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

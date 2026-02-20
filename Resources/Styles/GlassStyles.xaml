@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Premium Color Palette -->
+    <Color x:Key="PrimaryBlue">#0078D4</Color>
+    <Color x:Key="PrimaryBlueDark">#005A9E</Color>
+    <Color x:Key="AccentPurple">#5B5FC7</Color>
+    <Color x:Key="AccentTeal">#00B7C3</Color>
+    <Color x:Key="SuccessGreen">#107C10</Color>
+    <Color x:Key="ErrorRed">#D13438</Color>
+    <Color x:Key="WarningOrange">#FF8C00</Color>
+
+    <!-- Light Theme -->
+    <Color x:Key="LightBackground">#FAFAFA</Color>
+    <Color x:Key="LightSurface">#FFFFFF</Color>
+    <Color x:Key="LightSurfaceGlass">#F5FFFFFF</Color>
+    <Color x:Key="LightTextPrimary">#1A1A1A</Color>
+    <Color x:Key="LightTextSecondary">#6B6B6B</Color>
+    <Color x:Key="LightTextTertiary">#9E9E9E</Color>
+
+    <!-- Dark Theme -->
+    <Color x:Key="DarkBackground">#121212</Color>
+    <Color x:Key="DarkSurface">#1E1E1E</Color>
+    <Color x:Key="DarkSurfaceGlass">#401E1E1E</Color>
+    <Color x:Key="DarkTextPrimary">#FFFFFF</Color>
+    <Color x:Key="DarkTextSecondary">#A0A0A0</Color>
+    <Color x:Key="DarkTextTertiary">#6B6B6B</Color>
+
+    <!-- Primary Button Gradient -->
+    <LinearGradientBrush x:Key="PrimaryButtonGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0078D4" Offset="0"/>
+        <GradientStop Color="#005A9E" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- User Bubble Gradient -->
+    <LinearGradientBrush x:Key="UserBubbleGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0078D4" Offset="0"/>
+        <GradientStop Color="#005A9E" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Background Gradient -->
+    <LinearGradientBrush x:Key="BackgroundGradientLight" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FAFAFA" Offset="0"/>
+        <GradientStop Color="#F0F0F0" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Glass Card -->
+    <Style x:Key="GlassCard" TargetType="Frame">
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="HasShadow" Value="True"/>
+    </Style>
+
+    <!-- Primary Button -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource PrimaryButtonGradient}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="Padding" Value="24,14"/>
+    </Style>
+
+    <!-- Secondary Button -->
+    <Style x:Key="SecondaryButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="Padding" Value="24,14"/>
+    </Style>
+
+    <!-- Icon Button -->
+    <Style x:Key="IconButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="WidthRequest" Value="44"/>
+        <Setter Property="HeightRequest" Value="44"/>
+    </Style>
+
+    <!-- Send Button -->
+    <Style x:Key="SendButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource PrimaryButtonGradient}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="WidthRequest" Value="48"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="CornerRadius" Value="24"/>
+    </Style>
+
+    <!-- Modern Entry -->
+    <Style x:Key="ModernEntry" TargetType="Entry">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <!-- Settings Card -->
+    <Style x:Key="SettingsCard" TargetType="Frame">
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="Margin" Value="0,0,0,12"/>
+    </Style>
+
+    <!-- Document Card -->
+    <Style x:Key="DocumentCard" TargetType="Frame">
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Margin" Value="0,4"/>
+    </Style>
+
+</ResourceDictionary>

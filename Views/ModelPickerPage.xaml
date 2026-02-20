@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="MauMind.App.Views.ModelPickerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="AI Models"
+    Background="{AppThemeBinding Light={StaticResource BackgroundGradientLight}, Dark={StaticResource DarkBackground}}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Frame Grid.Row="0" Margin="16,16,16,8" CornerRadius="20" Padding="16,14"
+               Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+               HasShadow="True">
+            <StackLayout Spacing="4">
+                <Label Text="Choose AI Model"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                <Label x:Name="SubtitleLabel"
+                       Text="Select a model to power your AI assistant"
+                       FontSize="13"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Models List -->
+        <ScrollView Grid.Row="1" Padding="16,4,16,24">
+            <StackLayout x:Name="ModelsStack" Spacing="12"/>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

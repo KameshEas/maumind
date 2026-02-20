@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauMind.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauMind.App"
+    xmlns:views="clr-namespace:MauMind.App.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.TitleColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
+    Shell.BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}"
+    Title="MauMind">
+
+    <TabBar>
+        <Tab Title="Chat" Icon="💬">
+            <ShellContent ContentTemplate="{DataTemplate views:ChatPage}" />
+        </Tab>
+        <Tab Title="Documents" Icon="📄">
+            <ShellContent ContentTemplate="{DataTemplate views:DocumentsPage}" />
+        </Tab>
+        <Tab Title="Settings" Icon="⚙️">
+            <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
+        </Tab>
+    </TabBar>
+
+</Shell>

@@ -1,0 +1,128 @@
+stages:
+  - build
+  - release
+
+variables:
+  DOTNET_VERSION: "8.0"
+  ANDROID_SDK_VERSION: "34.0.0"
+  APP_NAME: "MauMind"
+  PACKAGE_NAME: "com.aspired2d.maumind"
+
+# Cache NuGet packages
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .nuget/packages
+    - ~/.nuget/packages
+
+# Default configuration
+default:
+  image: mcr.microsoft.com/dotnet/sdk:8.0-android
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+
+# Build stages
+.android-build:
+  stage: build
+  before_script:
+    - dotnet --version
+    - echo "Building $APP_NAME for Android..."
+  script:
+    - dotnet restore MauMind.App.sln
+    - dotnet build MauMind.App.sln -c Release -f net8.0-android --no-restore
+    - dotnet publish MauMind.App.sln -c Release -f net8.0-android --no-build -o ./publish/android
+  artifacts:
+    paths:
+      - publish/android/
+    expire_in: 1 week
+  tags:
+    - android
+
+# Release build for Indus App Store
+release:android:
+  stage: release
+  image: mcr.microsoft.com/dotnet/sdk:8.0-android
+  needs:
+    - job: .android-build
+      optional: true
+  before_script:
+    - echo "Preparing release for Indus App Store..."
+    # Install required Android SDK components
+    - yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+    - $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;34.0.0"
+  script:
+    # Create unsigned APK (you'll need to sign it)
+    - dotnet publish MauMind.App.sln -c Release -f net8.0-android -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=maumind.keystore -p:AndroidSigningKeyAlias=maumind -p:AndroidSigningKeyPass=${KEYSTORE_PASSWORD} -p:AndroidSigningStorePass=${KEYSTORE_PASSWORD} -o ./release
+    
+    # Create release notes
+    - echo "# $APP_NAME Release" > ./release/RELEASE_NOTES.md
+    - echo "Version: ${CI_COMMIT_REF_NAME}" >> ./release/RELEASE_NOTES.md
+    - echo "Build: ${CI_COMMIT_SHA}" >> ./release/RELEASE_NOTES.md
+    - echo "Date: $(date +%Y-%m-%d)" >> ./release/RELEASE_NOTES.md
+    
+    # Upload to Indus App Store (custom script required)
+    - |
+      if [ -n "$INDUS_API_URL" ]; then
+        echo "Uploading to Indus App Store..."
+        # Example curl command - modify according to Indus App Store API
+        curl -X POST "$INDUS_API_URL/upload" \
+          -F "file=@./release/${PACKAGE_NAME}.apk" \
+          -F "version=${CI_COMMIT_REF_NAME}" \
+          -H "Authorization: Bearer ${INDUS_API_TOKEN}"
+      else
+        echo "INDUS_API_URL not configured. Skipping upload."
+        echo "APK available at: ./release/${PACKAGE_NAME}.apk"
+      fi
+    
+    # Create GitHub/GitLab release if tag
+    - |
+      if [[ "$CI_COMMIT_TAG" == v* ]]; then
+        curl --request POST "$CI_API_V4_URL/projects/$CI_PROJECT_ID/releases" \
+          --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+          --form "tag_name=$CI_COMMIT_TAG" \
+          --form "description=Release notes" \
+          --form "assets[link][url]=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/jobs/artifacts/${CI_COMMIT_REF_NAME}/download?job=release:android"
+      fi
+  artifacts:
+    paths:
+      - release/
+    expire_in: 30 days
+  only:
+    - tags
+    - main
+  tags:
+    - android
+  environment:
+    name: production
+
+# iOS build (optional - uncomment if needed)
+# build:ios:
+#   stage: build
+#   image: mcr.microsoft.com/dotnet/sdk:8.0
+#   before_script:
+#     - dotnet --version
+#     - echo "Building $APP_NAME for iOS..."
+#   script:
+#     - dotnet restore MauMind.App.sln
+#     - dotnet build MauMind.App.sln -c Release -f net8.0-ios --no-restore
+#   tags:
+#     - ios
+#   only:
+#     - main
+
+# Windows build (optional)
+# build:windows:
+#   stage: build
+#   image: mcr.microsoft.com/dotnet/sdk:8.0-windows
+#   before_script:
+#     - dotnet --version
+#   script:
+#     - dotnet restore MauMind.App.sln
+#     - dotnet build MauMind.App.sln -c Release -f net8.0-windows10.0.19041.0 --no-restore
+#   tags:
+#     - windows
+#   only:
+#     - main

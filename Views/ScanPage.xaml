@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    x:Class="MauMind.App.Views.ScanPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Scan Document"
+    Background="{AppThemeBinding Light={StaticResource BackgroundGradientLight}, Dark={StaticResource DarkBackground}}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Frame Grid.Row="0" Margin="16,16,16,8" CornerRadius="20" Padding="16,12"
+               Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+               HasShadow="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Back Button -->
+                <Button Grid.Column="0" Text="←" FontSize="18" 
+                        BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
+                        WidthRequest="36" HeightRequest="36" Padding="0"
+                        Clicked="OnBackClicked"/>
+                
+                <!-- Title -->
+                <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="12,0">
+                    <Label Text="Scan Document" FontSize="20" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                    <Label Text="Extract text from images" FontSize="12"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+                </StackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- Main Content -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always" Padding="16,8">
+            <StackLayout Spacing="20">
+                
+                <!-- Scan Options -->
+                <StackLayout Spacing="16">
+                    <Label Text="Choose Scan Method" FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+
+                    <!-- Camera Scan -->
+                    <Frame CornerRadius="16" Padding="16"
+                           Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+                           HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCameraScanTapped"/>
+                        </Frame.GestureRecognizers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Frame Grid.Column="0" WidthRequest="56" HeightRequest="56" CornerRadius="28"
+                                   Background="{StaticResource PrimaryColor}" Padding="0">
+                                <Label Text="📷" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Frame>
+                            
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="16,0">
+                                <Label Text="Camera" FontSize="16" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                                <Label Text="Take a photo of your document" FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+                            </StackLayout>
+                            
+                            <Label Grid.Column="2" Text="→" FontSize="20" VerticalOptions="Center"
+                                   TextColor="{StaticResource PrimaryColor}"/>
+                        </Grid>
+                    </Frame>
+
+                    <!-- Gallery Scan -->
+                    <Frame CornerRadius="16" Padding="16"
+                           Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+                           HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnGalleryScanTapped"/>
+                        </Frame.GestureRecognizers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Frame Grid.Column="0" WidthRequest="56" HeightRequest="56" CornerRadius="28"
+                                   Background="{StaticResource AccentColor}" Padding="0">
+                                <Label Text="🖼️" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Frame>
+                            
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="16,0">
+                                <Label Text="Gallery" FontSize="16" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                                <Label Text="Select image from gallery" FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+                            </StackLayout>
+                            
+                            <Label Grid.Column="2" Text="→" FontSize="20" VerticalOptions="Center"
+                                   TextColor="{StaticResource AccentColor}"/>
+                        </Grid>
+                    </Frame>
+                </StackLayout>
+
+                <!-- Loading Indicator -->
+                <StackLayout x:Name="LoadingStack" IsVisible="False" Spacing="12" HorizontalOptions="Center" Margin="0,20">
+                    <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="{StaticResource PrimaryColor}" WidthRequest="40" HeightRequest="40"/>
+                    <Label Text="Processing image..." FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+                </StackLayout>
+
+                <!-- Results Section -->
+                <StackLayout x:Name="ResultsStack" IsVisible="False" Spacing="16">
+                    <Label Text="Extracted Text" FontSize="16" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+
+                    <!-- Extracted Text Display -->
+                    <Frame CornerRadius="12" Padding="16" HeightRequest="250"
+                           Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+                           HasShadow="False">
+                        <ScrollView>
+                            <Editor x:Name="ExtractedTextEditor"
+                                    FontSize="14"
+                                    IsReadOnly="False"
+                                    TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
+                                    BackgroundColor="Transparent"
+                                    AutoSize="TextChanges"/>
+                        </ScrollView>
+                    </Frame>
+
+                    <!-- Action Buttons -->
+                    <StackLayout Orientation="Horizontal" Spacing="12" HorizontalOptions="Center">
+                        <Button Text="🔄 Re-scan" 
+                                Style="{StaticResource SecondaryButton}"
+                                Clicked="OnRescanClicked"/>
+                        <Button Text="💾 Save as Document" 
+                                Style="{StaticResource PrimaryButton}"
+                                Clicked="OnSaveDocumentClicked"/>
+                    </StackLayout>
+                </StackLayout>
+
+                <!-- Info Card -->
+                <Frame CornerRadius="12" Padding="16"
+                       Background="{AppThemeBinding Light={StaticResource PrimaryMuted}, Dark=#1A3A5C}"
+                       HasShadow="False" Margin="0,20,0,0">
+                    <StackLayout Spacing="8">
+                        <Label Text="💡 Pro Tip" FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource PrimaryColor}"/>
+                        <Label Text="For best results, use clear images with good lighting. The OCR works best with printed text." FontSize="12" 
+                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                               LineBreakMode="WordWrap"/>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>

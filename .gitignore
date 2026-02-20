@@ -1,0 +1,142 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+MD
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.userprefs
+.vscode/
+.idea/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Android - build outputs
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+*.jar
+
+# Android - local.properties and SDK paths
+local.properties
+android/
+android/app/build/
+android/build/
+android/gradle/
+android/.gradle/
+
+# iOS - build outputs
+ipch/
+*.dSYM.zip
+*.dSYM
+*.mobileprovision
+
+# macOS
+.DS_Store
+*.pem
+*.p12
+keychain.*
+
+# Tizen
+.tizen/
+tizen/
+TizenProject/
+
+# Windows
+AppPackages/
+BundleArtifacts/
+*.appx
+*.appinstaller
+*.appxsym
+*.appxupload
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Package directories
+vendor/
+
+# Test results
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# SQL
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Keystore (private - keep the folder but ignore contents)
+keystore/*.keystore
+keystore/*.jks
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Azure Functions
+local.settings.json
+
+# Secrets
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+
+# Misc
+Thumbs.db

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="MauMind.App.Views.OnboardingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title=""
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
+    NavigationPage.HasNavigationBar="False">
+
+    <!-- Full-screen dynamic background -->
+    <Grid x:Name="RootGrid">
+
+        <!-- Animated Background Gradient -->
+        <BoxView x:Name="BgLayer1" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+        <BoxView x:Name="BgLayer2" HorizontalOptions="Fill" VerticalOptions="Fill" Opacity="0"/>
+
+        <!-- Decorative blobs for depth -->
+        <Ellipse x:Name="BlobTop"
+                 WidthRequest="340" HeightRequest="340"
+                 HorizontalOptions="Start" VerticalOptions="Start"
+                 Margin="-80,-80,0,0"
+                 Opacity="0.15">
+            <Ellipse.Fill>
+                <SolidColorBrush Color="White"/>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <Ellipse x:Name="BlobBottom"
+                 WidthRequest="280" HeightRequest="280"
+                 HorizontalOptions="End" VerticalOptions="End"
+                 Margin="0,0,-60,-60"
+                 Opacity="0.1">
+            <Ellipse.Fill>
+                <SolidColorBrush Color="White"/>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <!-- Main content layer -->
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <!-- Skip button (top-right) -->
+            <Button x:Name="SkipButton"
+                    Grid.Row="0"
+                    Text="Skip"
+                    TextColor="White"
+                    BackgroundColor="Transparent"
+                    FontSize="15"
+                    Opacity="0.85"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    Margin="0,56,20,0"
+                    Clicked="OnSkipClicked"/>
+
+            <!-- Slide Content Area -->
+            <Grid Grid.Row="1">
+
+                <!-- Slide 0: Privacy -->
+                <StackLayout x:Name="Slide0"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Padding="40,0" Spacing="0">
+                    <!-- Icon circle -->
+                    <Frame x:Name="S0Icon"
+                           WidthRequest="130" HeightRequest="130"
+                           CornerRadius="65" Padding="0"
+                           HorizontalOptions="Center"
+                           BackgroundColor="#30FFFFFF"
+                           Margin="0,0,0,36"
+                           Opacity="0" TranslationY="-30">
+                        <Label Text="🔒" FontSize="58"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Frame>
+                    <Label x:Name="S0Title"
+                           Text="100% Private"
+                           FontSize="32" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,16"
+                           Opacity="0" TranslationY="20"/>
+                    <Label x:Name="S0Desc"
+                           Text="All AI runs entirely on your device.&#x0A;Zero cloud. Zero tracking."
+                           FontSize="17"
+                           TextColor="White"
+                           Opacity="0"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           TranslationY="20"
+                           LineHeight="1.5"/>
+                </StackLayout>
+
+                <!-- Slide 1: Documents -->
+                <StackLayout x:Name="Slide1"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Padding="40,0" Spacing="0"
+                             IsVisible="False" Opacity="0" TranslationX="60">
+                    <Frame x:Name="S1Icon"
+                           WidthRequest="130" HeightRequest="130"
+                           CornerRadius="65" Padding="0"
+                           HorizontalOptions="Center"
+                           BackgroundColor="#30FFFFFF"
+                           Margin="0,0,0,36">
+                        <Label Text="📚" FontSize="58"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Frame>
+                    <Label x:Name="S1Title"
+                           Text="Ingest Your&#x0A;Knowledge"
+                           FontSize="32" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,16"/>
+                    <Label x:Name="S1Desc"
+                           Text="Import PDFs, add notes, and write journals.&#x0A;Build your personal knowledge base."
+                           FontSize="17"
+                           TextColor="White"
+                           Opacity="0.9"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineHeight="1.5"/>
+                </StackLayout>
+
+                <!-- Slide 2: Search -->
+                <StackLayout x:Name="Slide2"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Padding="40,0" Spacing="0"
+                             IsVisible="False" Opacity="0" TranslationX="60">
+                    <Frame x:Name="S2Icon"
+                           WidthRequest="130" HeightRequest="130"
+                           CornerRadius="65" Padding="0"
+                           HorizontalOptions="Center"
+                           BackgroundColor="#30FFFFFF"
+                           Margin="0,0,0,36">
+                        <Label Text="🔍" FontSize="58"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Frame>
+                    <Label x:Name="S2Title"
+                           Text="Ask Anything"
+                           FontSize="32" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,16"/>
+                    <Label x:Name="S2Desc"
+                           Text="Get context-aware answers from&#x0A;your own documents, privately."
+                           FontSize="17"
+                           TextColor="White"
+                           Opacity="0.9"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineHeight="1.5"/>
+                </StackLayout>
+
+                <!-- Slide 3: Ready -->
+                <StackLayout x:Name="Slide3"
+                             VerticalOptions="Center" HorizontalOptions="Center"
+                             Padding="40,0" Spacing="0"
+                             IsVisible="False" Opacity="0" TranslationX="60">
+                    <Frame x:Name="S3Icon"
+                           WidthRequest="130" HeightRequest="130"
+                           CornerRadius="65" Padding="0"
+                           HorizontalOptions="Center"
+                           BackgroundColor="#30FFFFFF"
+                           Margin="0,0,0,36">
+                        <Label Text="✨" FontSize="58"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Frame>
+                    <Label x:Name="S3Title"
+                           Text="Ready to Begin"
+                           FontSize="32" FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,16"/>
+                    <Label x:Name="S3Desc"
+                           Text="Your private AI assistant is ready.&#x0A;Everything stays on your device."
+                           FontSize="17"
+                           TextColor="White"
+                           Opacity="0.9"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           LineHeight="1.5"/>
+                </StackLayout>
+
+            </Grid>
+
+            <!-- Bottom area: dots + button -->
+            <Grid Grid.Row="2" Margin="32,0,32,56">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Progress Dots -->
+                <HorizontalStackLayout Grid.Row="0"
+                                       x:Name="DotsContainer"
+                                       HorizontalOptions="Center"
+                                       Spacing="8">
+                    <!-- Dot 0 (active) -->
+                    <Frame x:Name="Dot0"
+                           HeightRequest="10" WidthRequest="28"
+                           CornerRadius="5" Padding="0"
+                           BackgroundColor="White"/>
+                    <!-- Dot 1 -->
+                    <Frame x:Name="Dot1"
+                           HeightRequest="10" WidthRequest="10"
+                           CornerRadius="5" Padding="0"
+                           BackgroundColor="White" Opacity="0.4"/>
+                    <!-- Dot 2 -->
+                    <Frame x:Name="Dot2"
+                           HeightRequest="10" WidthRequest="10"
+                           CornerRadius="5" Padding="0"
+                           BackgroundColor="White" Opacity="0.4"/>
+                    <!-- Dot 3 -->
+                    <Frame x:Name="Dot3"
+                           HeightRequest="10" WidthRequest="10"
+                           CornerRadius="5" Padding="0"
+                           BackgroundColor="White" Opacity="0.4"/>
+                </HorizontalStackLayout>
+
+                <!-- Next / Get Started Button -->
+                <Button x:Name="NextButton"
+                        Grid.Row="2"
+                        Text="Next →"
+                        BackgroundColor="White"
+                        TextColor="#0078D4"
+                        FontAttributes="Bold"
+                        FontSize="17"
+                        CornerRadius="30"
+                        HeightRequest="58"
+                        HorizontalOptions="Fill"
+                        Clicked="OnNextClicked"/>
+            </Grid>
+
+        </Grid>
+    </Grid>
+
+</ContentPage>

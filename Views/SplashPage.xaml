@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauMind.App"
+             x:Class="MauMind.App.Views.SplashPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
+
+    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        
+        <!-- Background Gradient Effect -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
+                              Offset="0" />
+                <GradientStop Color="{AppThemeBinding Light={StaticResource LightBackgroundGradientEnd}, Dark={StaticResource DarkBackgroundGradientEnd}}"
+                              Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <VerticalStackLayout HorizontalOptions="Center" 
+                            VerticalOptions="Center"
+                            Spacing="30">
+            
+            <!-- Animated Logo Container -->
+            <Grid HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="150" HeightRequest="150">
+                
+                <!-- Pulsing Circle Background -->
+                <Ellipse x:Name="PulsingCircle"
+                         WidthRequest="120" 
+                         HeightRequest="120"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"
+                         Scale="0.8"
+                         Opacity="0.3">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0" />
+                            <GradientStop Color="Transparent" Offset="1" />
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <!-- Logo Image -->
+                <Image x:Name="LogoImage"
+                       Source="logo.png"
+                       WidthRequest="100"
+                       HeightRequest="100"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Aspect="AspectFit"
+                       Opacity="0" />
+            </Grid>
+
+            <!-- App Name -->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                <Label x:Name="AppNameLabel"
+                       Text="MauMind"
+                       FontSize="36"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
+                       Opacity="0" />
+
+                <!-- Tagline -->
+                <Label x:Name="TaglineLabel"
+                       Text="Your AI Assistant"
+                       FontSize="16"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                       Opacity="0" />
+            </VerticalStackLayout>
+
+            <!-- Loading Indicator -->
+            <StackLayout x:Name="LoadingStack" 
+                         HorizontalOptions="Center" 
+                         Spacing="8"
+                         Opacity="0">
+                <ActivityIndicator x:Name="LoadingIndicator"
+                                   IsRunning="True"
+                                   Color="{StaticResource PrimaryColor}"
+                                   WidthRequest="24"
+                                   HeightRequest="24"/>
+                <Label Text="Loading..."
+                       FontSize="14"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
+                       HorizontalOptions="Center"/>
+            </StackLayout>
+
+            <!-- Version Info -->
+            <Label x:Name="VersionLabel"
+                   Text="v1.0"
+                   FontSize="12"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
+                   Opacity="0"
+                   Margin="0,20,0,0"/>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>

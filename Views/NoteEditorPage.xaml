@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="MauMind.App.Views.NoteEditorPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Note Editor"
+    Background="{AppThemeBinding Light={StaticResource BackgroundGradientLight}, Dark={StaticResource DarkBackground}}">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+        <!-- Header Toolbar -->
+        <Frame Grid.Row="0" Margin="8" CornerRadius="12" Padding="12,8"
+               Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+               HasShadow="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Back Button -->
+                <Button Grid.Column="0" Text="← Back" FontSize="14"
+                        BackgroundColor="Transparent" TextColor="{StaticResource AccentPurple}"
+                        Command="{Binding CancelCommand}"/>
+
+                <!-- Status -->
+                <Label Grid.Column="1" Text="{Binding StatusMessage}" FontSize="12"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                <!-- Save Button -->
+                <Button Grid.Column="2" Text="✓ Save" FontSize="14"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding SaveCommand}"/>
+            </Grid>
+        </Frame>
+
+        <!-- Editor Area -->
+        <ScrollView Grid.Row="1" Padding="12,0">
+            <StackLayout Spacing="12">
+                <!-- Title Entry -->
+                <Frame CornerRadius="12" Padding="12,8"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2A2A2A}"
+                       HasShadow="False">
+                    <Entry Placeholder="Note title..." 
+                           Text="{Binding Title}"
+                           FontSize="20" FontAttributes="Bold"
+                           BackgroundColor="Transparent"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                </Frame>
+
+                <!-- Content Editor -->
+                <Frame CornerRadius="12" Padding="12"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2A2A2A}"
+                       HasShadow="False" MinimumHeightRequest="200">
+                    <Editor x:Name="ContentEditor"
+                            Placeholder="Start writing your note...&#x0a;&#x0a;💡 Tip: Tap 'Analyze' to get AI writing suggestions!"
+                            Text="{Binding Content}"
+                            FontSize="16"
+                            AutoSize="TextChanges"
+                            MinimumHeightRequest="200"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                </Frame>
+
+                <!-- Suggestions Section -->
+                <StackLayout x:Name="SuggestionsSection" Spacing="8" IsVisible="{Binding HasSuggestions}">
+                    <Label Text="💡 AI Suggestions" FontSize="14" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+
+                    <StackLayout x:Name="SuggestionsStack" Spacing="8" BindableLayout.ItemsSource="{Binding Suggestions}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Frame CornerRadius="10" Padding="12,8"
+                                       BackgroundColor="#FFF8E1"
+                                       HasShadow="False">
+                                    <StackLayout Spacing="6">
+                                        <!-- Suggestion Type Badge -->
+                                        <Label Text="{Binding Type}" FontSize="11" FontAttributes="Bold"
+                                               TextColor="#333333" HorizontalOptions="Start"/>
+
+                                        <!-- Original → Suggested -->
+                                        <Label Text="{Binding OriginalText}" FontSize="13" TextColor="#B71C1C" TextDecorations="Strikethrough"/>
+                                        <Label Text="{Binding SuggestedText, StringFormat='→ {0}'}" FontSize="14" TextColor="#1B5E20" FontAttributes="Bold"/>
+
+                                        <!-- Explanation -->
+                                        <Label Text="{Binding Explanation}" FontSize="12" TextColor="#666666"/>
+
+                                        <!-- Action Buttons -->
+                                        <StackLayout Orientation="Horizontal" Spacing="8">
+                                            <Button Text="✓ Accept" FontSize="12"
+                                                    BackgroundColor="{StaticResource AccentPurple}"
+                                                    TextColor="White" CornerRadius="8"
+                                                    Clicked="OnAcceptSuggestion"/>
+                                            <Button Text="✕ Ignore" FontSize="12"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="#666666"
+                                                    CornerRadius="8"
+                                                    Clicked="OnIgnoreSuggestion"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Writing Tools -->
+        <Frame Grid.Row="2" Margin="8" CornerRadius="12" Padding="12,8"
+               Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
+               HasShadow="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Tone Selector -->
+                <Picker Grid.Column="0" 
+                        Title="Tone"
+                        ItemsSource="{Binding ToneOptions}"
+                        SelectedItem="{Binding SelectedTone}"
+                        TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
+                        HorizontalOptions="Fill"/>
+
+                <!-- Rewrite Button -->
+                <Button Grid.Column="1" Text="📝 Rewrite" FontSize="12"
+                        BackgroundColor="Transparent" TextColor="{StaticResource AccentPurple}"
+                        Command="{Binding RewriteCommand}"
+                        Margin="8,0,0,0"/>
+
+                <!-- Analyze Button -->
+                <Button Grid.Column="2" Text="🔍 Analyze" FontSize="12"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding AnalyzeCommand}"
+                        Margin="8,0,0,0"/>
+            </Grid>
+        </Frame>
+
+        <!-- Loading Overlay -->
+        <Frame Grid.RowSpan="4" 
+               x:Name="LoadingOverlay"
+               IsVisible="{Binding IsAnalyzing}"
+               BackgroundColor="#80000000"
+               HasShadow="False"
+               VerticalOptions="Fill" HorizontalOptions="Fill">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <ActivityIndicator IsRunning="{Binding IsAnalyzing}" Color="{StaticResource AccentPurple}"/>
+                <Label Text="Analyzing your writing..." FontSize="14"
+                       TextColor="White" Margin="0,12,0,0"/>
+            </StackLayout>
+        </Frame>
+    </Grid>
+
+</ContentPage>
