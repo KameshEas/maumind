@@ -8,11 +8,40 @@
     <!-- TYPOGRAPHY STYLES - Consistent Text Hierarchy                    -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- TYPOGRAPHY - Linear/Vercel Style Hierarchy                      -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Display - Large hero text -->
+    <Style x:Key="Display" TargetType="Label">
+        <Setter Property="FontSize" Value="34"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+        <Setter Property="LineHeight" Value="1.2"/>
+    </Style>
+    
     <!-- Page Title -->
     <Style x:Key="PageTitle" TargetType="Label">
         <Setter Property="FontSize" Value="28"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+        <Setter Property="LineHeight" Value="1.3"/>
+    </Style>
+    
+    <!-- Heading - Section headers -->
+    <Style x:Key="Heading" TargetType="Label">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+        <Setter Property="LineHeight" Value="1.3"/>
+    </Style>
+    
+    <!-- Title - Card/section titles -->
+    <Style x:Key="Title" TargetType="Label">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontAttributes" Value="SemiBold"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+        <Setter Property="LineHeight" Value="1.4"/>
     </Style>
     
     <!-- Section Header -->
@@ -25,25 +54,41 @@
     <!-- Card Title -->
     <Style x:Key="CardTitle" TargetType="Label">
         <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontAttributes" Value="SemiBold"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
     </Style>
     
     <!-- Body Text -->
     <Style x:Key="BodyText" TargetType="Label">
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+        <Setter Property="LineHeight" Value="1.5"/>
+    </Style>
+    
+    <!-- Body Secondary -->
+    <Style x:Key="BodySecondary" TargetType="Label">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+        <Setter Property="LineHeight" Value="1.5"/>
     </Style>
     
     <!-- Secondary Text -->
     <Style x:Key="SecondaryText" TargetType="Label">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+        <Setter Property="LineHeight" Value="1.5"/>
     </Style>
     
     <!-- Caption Text -->
     <Style x:Key="CaptionText" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"/>
+        <Setter Property="LineHeight" Value="1.4"/>
+    </Style>
+    
+    <!-- Label Small - Ultra small text -->
+    <Style x:Key="LabelSmall" TargetType="Label">
+        <Setter Property="FontSize" Value="11"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"/>
     </Style>
 
@@ -567,9 +612,9 @@
         <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray200}}" />
         <Setter Property="Shell.NavBarHasShadow" Value="False" />
         <Setter Property="Shell.TabBarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
-        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource White}}" />
-        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource White}}" />
-        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
+        <Setter Property="Shell.TabBarForegroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+        <Setter Property="Shell.TabBarTitleColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+        <Setter Property="Shell.TabBarUnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
     </Style>
 
     <Style TargetType="NavigationPage">
@@ -579,10 +624,10 @@
     </Style>
 
     <Style TargetType="TabbedPage">
-        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}" />
-        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource White}}" />
-        <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
-        <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"/>
+        <Setter Property="BarTextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+        <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"/>
+        <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryLight}}"/>
     </Style>
 
 </ResourceDictionary>
