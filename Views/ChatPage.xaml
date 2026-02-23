@@ -27,9 +27,14 @@
                 
                 <!-- Title & Status -->
                 <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="12,0">
-                    <Label Text="MauMind AI" Style="{StaticResource CardTitle}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
-                    <Label Text="{Binding StatusMessage}" Style="{StaticResource CaptionText}"
+                    <StackLayout Orientation="Horizontal" Spacing="8">
+                        <Label Text="MauMind" Style="{StaticResource CardTitle}"
+                               TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                        <!-- AI Status Indicator -->
+                        <Frame WidthRequest="8" HeightRequest="8" CornerRadius="4" 
+                               Background="{StaticResource Success}" Padding="0" VerticalOptions="Center"/>
+                    </StackLayout>
+                    <Label Text="Online • Ready to help" Style="{StaticResource CaptionText}"
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
                 </StackLayout>
                 
@@ -60,12 +65,11 @@
                         </Frame>
                         
                         <Label Text="Welcome to MauMind" 
-                               Style="{StaticResource PageTitle}"
-                               HorizontalOptions="Center" Margin="0,16,0,8"
-                               FontSize="24"/>
+                               Style="{StaticResource Heading}"
+                               HorizontalOptions="Center" Margin="0,16,0,8"/>
                         
                         <Label Text="Your private AI assistant&#x0a;All data stays on your device" 
-                               Style="{StaticResource SecondaryText}"
+                               Style="{StaticResource BodySecondary}"
                                HorizontalOptions="Center" 
                                HorizontalTextAlignment="Center"
                                Margin="0,0,0,24"/>
@@ -75,40 +79,50 @@
                                 Style="{StaticResource PrimaryButton}"
                                 HorizontalOptions="Center"
                                 Clicked="OnSampleQuestionClicked"/>
+                        
+                        <!-- Quick suggestions -->
+                        <StackLayout Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+                            <Frame CornerRadius="12" Padding="12,6" Background="{StaticResource Gray100}">
+                                <Label Text="Summarize my notes" FontSize="12" TextColor="{StaticResource Gray600}"/>
+                            </Frame>
+                            <Frame CornerRadius="12" Padding="12,6" Background="{StaticResource Gray100}">
+                                <Label Text="Write a poem" FontSize="12" TextColor="{StaticResource Gray600}"/>
+                            </Frame>
+                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
         </ScrollView>
 
-        <!-- Premium Floating Input Bar -->
+        <!-- Premium Input Bar - Clean Design -->
         <Grid Grid.Row="2" Margin="16,8,16,20">
             <Frame CornerRadius="28" Padding="4"
                    Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
                    HasShadow="True">
                 <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-                    <!-- Voice Button -->
+                    <!-- Voice Input - Clean icon -->
                     <Button Grid.Column="0"
                             x:Name="VoiceButton"
                             Text="🎤"
                             FontSize="18"
                             Clicked="OnVoiceClicked"
                             BackgroundColor="Transparent"
-                            TextColor="{StaticResource PrimaryBlue}"
-                            WidthRequest="48"
-                            HeightRequest="48"
-                            CornerRadius="24"/>
+                            TextColor="{StaticResource Primary}"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            CornerRadius="22"/>
                     
                     <!-- Text Input -->
                     <Entry Grid.Column="1"
                            x:Name="MessageEntry"
                            Text="{Binding UserInput, Mode=TwoWay}"
-                           Placeholder="Type your message..."
+                           Placeholder="Message MauMind..."
                            VerticalOptions="Center"
                            BackgroundColor="Transparent"
                            FontSize="15"
                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
                            PlaceholderColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
-                           Margin="4,0"/>
+                           Margin="8,0"/>
                     
                     <!-- Cancel Button (shown when processing) -->
                     <Button Grid.Column="2"
@@ -116,11 +130,11 @@
                             FontSize="14"
                             Clicked="OnCancelClicked"
                             IsVisible="{Binding IsProcessing}"
-                            BackgroundColor="#20000000"
-                            TextColor="{StaticResource ErrorRed}"
-                            WidthRequest="40"
-                            HeightRequest="40"
-                            CornerRadius="20"
+                            BackgroundColor="{StaticResource ErrorLight}"
+                            TextColor="{StaticResource Error}"
+                            WidthRequest="36"
+                            HeightRequest="36"
+                            CornerRadius="18"
                             Margin="4,0"/>
                     
                     <!-- Send Button with Gradient -->
@@ -131,9 +145,9 @@
                             Clicked="OnSendClicked"
                             Background="{StaticResource PrimaryButtonGradient}"
                             TextColor="White"
-                            WidthRequest="48"
-                            HeightRequest="48"
-                            CornerRadius="24"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            CornerRadius="22"
                             Margin="4,0,0,0"/>
                 </Grid>
             </Frame>

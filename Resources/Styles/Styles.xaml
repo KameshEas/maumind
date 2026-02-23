@@ -39,7 +39,7 @@
     <!-- Title - Card/section titles -->
     <Style x:Key="Title" TargetType="Label">
         <Setter Property="FontSize" Value="17"/>
-        <Setter Property="FontAttributes" Value="SemiBold"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
         <Setter Property="LineHeight" Value="1.4"/>
     </Style>
@@ -54,7 +54,7 @@
     <!-- Card Title -->
     <Style x:Key="CardTitle" TargetType="Label">
         <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontAttributes" Value="SemiBold"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
     </Style>
     
