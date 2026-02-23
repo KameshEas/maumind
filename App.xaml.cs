@@ -33,6 +33,7 @@ public partial class App : Application
         services.AddSingleton<IVectorStore, VectorStore>();
         services.AddSingleton<IDocumentService, DocumentService>();
         services.AddSingleton<IDocumentScanService, DocumentScanService>();
+        services.AddSingleton<ISecretModeService, SecretModeService>();
         services.AddSingleton<IChatService, HybridChatService>();
         services.AddSingleton<IVoiceService, VoiceService>();
         services.AddSingleton<IThemeService, ThemeService>();
