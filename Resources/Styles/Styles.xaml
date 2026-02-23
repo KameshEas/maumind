@@ -189,6 +189,63 @@
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
     </Style>
+    
+    <!-- Ghost Button - Text only, minimal -->
+    <Style x:Key="GhostButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="SemiBold"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="MinimumHeightRequest" Value="36"/>
+    </Style>
+    
+    <!-- Small Button - Compact actions -->
+    <Style x:Key="SmallButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="MinimumHeightRequest" Value="36"/>
+    </Style>
+    
+    <!-- Badge Style - For counts and labels -->
+    <Style x:Key="Badge" TargetType="Frame">
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="8,2"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryMuted}"/>
+    </Style>
+    
+    <!-- Success Badge -->
+    <Style x:Key="SuccessBadge" TargetType="Frame" BasedOn="{StaticResource Badge}">
+        <Setter Property="BackgroundColor" Value="{StaticResource SuccessLight}"/>
+    </Style>
+    
+    <!-- Warning Badge -->
+    <Style x:Key="WarningBadge" TargetType="Frame" BasedOn="{StaticResource Badge}">
+        <Setter Property="BackgroundColor" Value="{StaticResource WarningLight}"/>
+    </Style>
+    
+    <!-- Error Badge -->
+    <Style x:Key="ErrorBadge" TargetType="Frame" BasedOn="{StaticResource Badge}">
+        <Setter Property="BackgroundColor" Value="{StaticResource ErrorLight}"/>
+    </Style>
+    
+    <!-- Skeleton Loading - Placeholder -->
+    <Style x:Key="SkeletonLine" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="HeightRequest" Value="16"/>
+    </Style>
+    
+    <!-- Skeleton Circle -->
+    <Style x:Key="SkeletonCircle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"/>
+        <Setter Property="CornerRadius" Value="999"/>
+    </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!-- CARD STYLES - Surface Components                                    -->
