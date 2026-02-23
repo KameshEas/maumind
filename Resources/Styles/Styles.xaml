@@ -195,7 +195,7 @@
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextColor" Value="{StaticResource Primary}"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="FontAttributes" Value="SemiBold"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="Padding" Value="12,8"/>
         <Setter Property="MinimumHeightRequest" Value="36"/>
     </Style>
@@ -251,34 +251,9 @@
     <!-- SWIPE GESTURE STYLES - Mobile Interactions                        -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     
-    <!-- Swipe Delete Action (Swipe Left) -->
-    <Style x:Key="SwipeDeleteItem" TargetType="SwipeItem">
-        <Setter Property="BackgroundColor" Value="{StaticResource Error}"/>
-        <Setter Property="TextColor" Value="White"/>
-        <Setter Property="IconColor" Value="White"/>
-    </Style>
+    <!-- Swipe Delete Action (Swipe Left) - Use SwipeItem style in code-behind -->
+    <!-- Note: SwipeItem styling is done in code, not XAML in MAUI -->
     
-    <!-- Swipe Archive/Favorite Action (Swipe Right) -->
-    <Style x:Key="SwipeFavoriteItem" TargetType="SwipeItem">
-        <Setter Property="BackgroundColor" Value="{StaticResource Warning}"/>
-        <Setter Property="TextColor" Value="White"/>
-        <Setter Property="IconColor" Value="White"/>
-    </Style>
-    
-    <!-- Swipe Info Action (Swipe Right) -->
-    <Style x:Key="SwipeInfoItem" TargetType="SwipeItem">
-        <Setter Property="BackgroundColor" Value="{StaticResource Info}"/>
-        <Setter Property="TextColor" Value="White"/>
-        <Setter Property="IconColor" Value="White"/>
-    </Style>
-    
-    <!-- Swipe Container Style -->
-    <Style x:Key="SwipeContainer" TargetType="SwipeView">
-        <Setter Property="LeftSwipeThreshold" Value="50"/>
-        <Setter Property="RightSwipeThreshold" Value="50"/>
-        <Setter Property="TopSwipeThreshold" Value="50"/>
-        <Setter Property="BottomSwipeThreshold" Value="50"/>
-    </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!-- CARD STYLES - Surface Components                                    -->
