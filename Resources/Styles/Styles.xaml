@@ -246,6 +246,39 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"/>
         <Setter Property="CornerRadius" Value="999"/>
     </Style>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- SWIPE GESTURE STYLES - Mobile Interactions                        -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Swipe Delete Action (Swipe Left) -->
+    <Style x:Key="SwipeDeleteItem" TargetType="SwipeItem">
+        <Setter Property="BackgroundColor" Value="{StaticResource Error}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="IconColor" Value="White"/>
+    </Style>
+    
+    <!-- Swipe Archive/Favorite Action (Swipe Right) -->
+    <Style x:Key="SwipeFavoriteItem" TargetType="SwipeItem">
+        <Setter Property="BackgroundColor" Value="{StaticResource Warning}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="IconColor" Value="White"/>
+    </Style>
+    
+    <!-- Swipe Info Action (Swipe Right) -->
+    <Style x:Key="SwipeInfoItem" TargetType="SwipeItem">
+        <Setter Property="BackgroundColor" Value="{StaticResource Info}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="IconColor" Value="White"/>
+    </Style>
+    
+    <!-- Swipe Container Style -->
+    <Style x:Key="SwipeContainer" TargetType="SwipeView">
+        <Setter Property="LeftSwipeThreshold" Value="50"/>
+        <Setter Property="RightSwipeThreshold" Value="50"/>
+        <Setter Property="TopSwipeThreshold" Value="50"/>
+        <Setter Property="BottomSwipeThreshold" Value="50"/>
+    </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!-- CARD STYLES - Surface Components                                    -->
