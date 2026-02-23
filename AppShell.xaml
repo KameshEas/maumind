@@ -11,13 +11,13 @@
     Title="MauMind">
 
     <TabBar>
-        <Tab Title="Chat" Icon="💬">
+        <Tab Title="Chat" Icon="chat">
             <ShellContent ContentTemplate="{DataTemplate views:ChatPage}" />
         </Tab>
-        <Tab Title="Documents" Icon="📄">
+        <Tab Title="Docs" Icon="document">
             <ShellContent ContentTemplate="{DataTemplate views:DocumentsPage}" />
         </Tab>
-        <Tab Title="Settings" Icon="⚙️">
+        <Tab Title="Settings" Icon="settings">
             <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" />
         </Tab>
     </TabBar>

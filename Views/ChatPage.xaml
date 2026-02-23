@@ -33,41 +33,45 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
                 </StackLayout>
                 
-                <!-- Settings Icon -->
-                <Button Grid.Column="2" Text="⚙" FontSize="18" Style="{StaticResource IconButton}"
-                        BackgroundColor="Transparent" Clicked="OnSettingsClicked"/>
+                <!-- Settings Icon - Clean icon -->
+                <Button Grid.Column="2" Text="⚙" FontSize="22" Style="{StaticResource IconButton}" 
+                        BackgroundColor="Transparent" Clicked="OnSettingsClicked"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
             </Grid>
         </Frame>
 
         <!-- Chat Messages Area -->
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always" Padding="16,8">
             <StackLayout x:Name="MessagesStack" Spacing="12">
-                <!-- Empty State -->
+                <!-- Empty State - Premium Design -->
                 <StackLayout x:Name="ChatEmptyState" 
                              VerticalOptions="Center" 
                              HorizontalOptions="Center" 
-                             Margin="20,60,20,20"
+                             Margin="20,40,20,20"
                              Spacing="16">
                     <StackLayout HorizontalOptions="Center">
-                        <!-- Premium Icon with Glow -->
-                        <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50"
-                               Background="{AppThemeBinding Light=#E3F2FD, Dark=#1E3A5F}"
+                        <!-- Premium Icon - Clean circle -->
+                        <Frame WidthRequest="80" HeightRequest="80" CornerRadius="40"
+                               Background="{AppThemeBinding Light={StaticResource PrimaryMuted}, Dark={StaticResource PrimaryDark}}"
                                HorizontalOptions="Center" Padding="0">
-                            <Label Text="✨" FontSize="42" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Label Text="M" FontSize="32" FontAttributes="Bold" 
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryLight}}"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
                         
                         <Label Text="Welcome to MauMind" 
                                Style="{StaticResource PageTitle}"
-                               HorizontalOptions="Center" Margin="0,16,0,8"/>
+                               HorizontalOptions="Center" Margin="0,16,0,8"
+                               FontSize="24"/>
                         
-                        <Label Text="Your private AI assistant that keeps&#x0a;all data on your device" 
+                        <Label Text="Your private AI assistant&#x0a;All data stays on your device" 
                                Style="{StaticResource SecondaryText}"
                                HorizontalOptions="Center" 
                                HorizontalTextAlignment="Center"
-                               Margin="0,0,0,20"/>
+                               Margin="0,0,0,24"/>
                         
                         <!-- Premium CTA Button -->
-                        <Button Text="Start Chatting →" 
+                        <Button Text="Start Chatting" 
                                 Style="{StaticResource PrimaryButton}"
                                 HorizontalOptions="Center"
                                 Clicked="OnSampleQuestionClicked"/>

@@ -3,27 +3,33 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- MAUMIND DESIGN SYSTEM v2.0                                          -->
-    <!-- Designed for General Consumer - Privacy-Focused AI Assistant       -->
+    <!-- MAUMIND DESIGN SYSTEM v3.0 - 2026 EDITION                           -->
+    <!-- Enterprise-Grade | AI-Native | Developer-First                      -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
 
-    <!-- PRIMARY BRAND COLORS - Trust & Technology -->
-    <Color x:Key="PrimaryColor">#0078D4</Color>
-    <Color x:Key="Primary">#0078D4</Color>
-    <Color x:Key="PrimaryDark">#005A9E</Color>
-    <Color x:Key="PrimaryLight">#4BA0E8</Color>
-    <Color x:Key="PrimaryMuted">#E3F2FD</Color>
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- PRIMARY BRAND - Modern Indigo (Linear/Stripe Inspired)             -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <Color x:Key="PrimaryColor">#5E6AD2</Color>
+    <Color x:Key="Primary">#5E6AD2</Color>
+    <Color x:Key="PrimaryHover">#4F55B8</Color>
+    <Color x:Key="PrimaryPressed">#454DA1</Color>
+    <Color x:Key="PrimaryDark">#3D3F8F</Color>
+    <Color x:Key="PrimaryLight">#8B8FE3</Color>
+    <Color x:Key="PrimaryMuted">#E8EAF6</Color>
+    <Color x:Key="PrimarySurface">#EEF0FB</Color>
     
-    <!-- SECONDARY COLORS - Accent & Depth -->
-    <Color x:Key="SecondaryColor">#5AC8FA</Color>
-    <Color x:Key="Secondary">#5AC8FA</Color>
-    <Color x:Key="SecondaryDark">#0078D4</Color>
-    <Color x:Key="SecondaryMuted">#E1F5FE</Color>
+    <!-- SECONDARY COLORS - Teal Accent -->
+    <Color x:Key="SecondaryColor">#14B8A6</Color>
+    <Color x:Key="Secondary">#14B8A6</Color>
+    <Color x:Key="SecondaryDark">#0D9488</Color>
+    <Color x:Key="SecondaryMuted">#CCFBF1</Color>
     
-    <!-- ACCENT - CTAs & Highlights -->
-    <Color x:Key="AccentColor">#FF9800</Color>
-    <Color x:Key="Accent">#FF9800</Color>
-    <Color x:Key="AccentLight">#FFE0B2</Color>
+    <!-- ACCENT - Vibrant Purple for Premium Feel -->
+    <Color x:Key="AccentColor">#8B5CF6</Color>
+    <Color x:Key="Accent">#8B5CF6</Color>
+    <Color x:Key="AccentLight">#EDE9FE</Color>
+    <Color x:Key="AccentPurple">#8B5CF6</Color>
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     <!-- SEMANTIC COLORS - Meaning-First Design                             -->
@@ -110,9 +116,9 @@
     <!-- CHAT UI COLORS                                                       -->
     <!-- ═══════════════════════════════════════════════════════════════════ -->
     
-    <!-- User Messages -->
-    <Color x:Key="UserBubbleColor">#0078D4</Color>
-    <Color x:Key="UserBubbleLight">#E3F2FD</Color>
+    <!-- User Messages - Updated to Primary Indigo -->
+    <Color x:Key="UserBubbleColor">#5E6AD2</Color>
+    <Color x:Key="UserBubbleLight">#E8EAF6</Color>
     <Color x:Key="UserTextColor">#FFFFFF</Color>
     <Color x:Key="UserTextLight">#1A1A2E</Color>
     
@@ -134,8 +140,8 @@
     
     <Color x:Key="TabBarBackground">#FFFFFF</Color>
     <Color x:Key="TabBarBackgroundDark">#1A1A1E</Color>
-    <Color x:Key="TabBarSelected">#0078D4</Color>
-    <Color x:Key="TabBarSelectedDark">#4BA0E8</Color>
+    <Color x:Key="TabBarSelected">#5E6AD2</Color>
+    <Color x:Key="TabBarSelectedDark">#8B8FE3</Color>
     <Color x:Key="TabBarUnselected">#9CA3AF</Color>
     <Color x:Key="TabBarUnselectedDark">#6B7280</Color>
 
@@ -270,7 +276,7 @@
     
     <!-- Tab Bar (legacy) -->
     <Color x:Key="TabBarBackground_Legacy">#FFFFFF</Color>
-    <Color x:Key="TabBarSelected_Legacy">#0078D4</Color>
+    <Color x:Key="TabBarSelected_Legacy">#5E6AD2</Color>
     <Color x:Key="TabBarUnselected_Legacy">#999999</Color>
     
     <!-- Legacy Grays -->

@@ -2,9 +2,10 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Premium Color Palette -->
-    <Color x:Key="PrimaryBlue">#0078D4</Color>
-    <Color x:Key="PrimaryBlueDark">#005A9E</Color>
+    <!-- Premium Color Palette - Updated to v3.0 -->
+    <Color x:Key="PrimaryBlue">#5E6AD2</Color>
+    <Color x:Key="PrimaryBlueDark">#3D3F8F</Color>
+    <Color x:Key="PrimaryBlueLight">#8B8FE3</Color>
     <Color x:Key="AccentPurple">#5B5FC7</Color>
     <Color x:Key="AccentTeal">#00B7C3</Color>
     <Color x:Key="SuccessGreen">#107C10</Color>
@@ -27,16 +28,16 @@
     <Color x:Key="DarkTextSecondary">#A0A0A0</Color>
     <Color x:Key="DarkTextTertiary">#6B6B6B</Color>
 
-    <!-- Primary Button Gradient -->
+    <!-- Primary Button Gradient - Updated to v3.0 Indigo -->
     <LinearGradientBrush x:Key="PrimaryButtonGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#0078D4" Offset="0"/>
-        <GradientStop Color="#005A9E" Offset="1"/>
+        <GradientStop Color="#5E6AD2" Offset="0"/>
+        <GradientStop Color="#3D3F8F" Offset="1"/>
     </LinearGradientBrush>
 
-    <!-- User Bubble Gradient -->
+    <!-- User Bubble Gradient - Updated to v3.0 Indigo -->
     <LinearGradientBrush x:Key="UserBubbleGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#0078D4" Offset="0"/>
-        <GradientStop Color="#005A9E" Offset="1"/>
+        <GradientStop Color="#5E6AD2" Offset="0"/>
+        <GradientStop Color="#3D3F8F" Offset="1"/>
     </LinearGradientBrush>
 
     <!-- Background Gradient -->

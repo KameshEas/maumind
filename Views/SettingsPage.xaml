@@ -99,11 +99,11 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
                            Margin="0,0,0,10"/>
                     
-                    <Button Text="🔄 Reload AI Models" Command="{Binding ReloadModelsCommand}" 
-                            BackgroundColor="#0078D4" TextColor="White" CornerRadius="10" Margin="0,5"/>
+                    <Button Text="Reload AI Models" Command="{Binding ReloadModelsCommand}" 
+                            BackgroundColor="{StaticResource Primary}" TextColor="White" CornerRadius="10" Margin="0,5"/>
                     
-                    <Button Text="🗑️ Clear Cache" Command="{Binding ClearCacheCommand}" 
-                            BackgroundColor="#FF9800" TextColor="White" CornerRadius="10" Margin="0,5"/>
+                    <Button Text="Clear Cache" Command="{Binding ClearCacheCommand}" 
+                            BackgroundColor="{StaticResource Warning}" TextColor="White" CornerRadius="10" Margin="0,5"/>
                 </StackLayout>
             </Frame>
 
@@ -263,20 +263,25 @@
                 </StackLayout>
             </Frame>
 
-            <!-- About -->
+            <!-- About - Premium Design -->
             <Frame CornerRadius="12" Padding="15" 
                    BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLightBrush}, Dark={StaticResource CardBackgroundDarkBrush}}">
                 <StackLayout>
                     <Label Text="About" FontAttributes="Bold" FontSize="16" 
                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
                            Margin="0,0,0,10"/>
-                    <Label Text="MauMind" FontAttributes="Bold" FontSize="18" TextColor="#0078D4"/>
-                    <Label Text="Offline-First Local RAG Assistant" FontSize="14" 
+                    <Label Text="MauMind" FontAttributes="Bold" FontSize="20" TextColor="{StaticResource Primary}"/>
+                    <Label Text="Your Private AI Assistant" FontSize="14" 
                            TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                    <Label Text="Version 1.0.0" FontSize="12" 
+                    <Label Text="Version 1.0 (Beta)" FontSize="12" 
                            TextColor="{AppThemeBinding Light={StaticResource TextTertiaryLight}, Dark={StaticResource TextTertiaryDark}}" 
-                           Margin="0,5,0,0"/>
-                    <Label Text="🔒 All data stays on your device" FontSize="12" TextColor="Green" Margin="0,10,0,0"/>
+                           Margin="0,8,0,0"/>
+                    
+                    <!-- Privacy Badge -->
+                    <Frame CornerRadius="8" Padding="8,4" BackgroundColor="{StaticResource SuccessLight}" 
+                           HorizontalOptions="Start" Margin="0,12,0,0">
+                        <Label Text="All data stays on your device" FontSize="11" TextColor="{StaticResource SuccessDark}"/>
+                    </Frame>
                 </StackLayout>
             </Frame>
         </StackLayout>

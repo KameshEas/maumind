@@ -29,7 +29,7 @@
                 <Frame Grid.Column="0" WidthRequest="44" HeightRequest="44" CornerRadius="22"
                        Background="{StaticResource AccentPurple}" Padding="0"
                        IsVisible="{Binding CurrentFolder, Converter={StaticResource IsNullConverter}}">
-                    <Label Text="📄" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Label Text="📑" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
                 </Frame>
                 
                 <!-- Title & Path -->
@@ -98,18 +98,18 @@
                            Margin="4,0"/>
 
                     <StackLayout x:Name="DocumentsStack" Spacing="12">
-                        <!-- Empty State -->
+                        <!-- Empty State - Premium Design -->
                         <StackLayout x:Name="DocumentsEmptyState" 
                                      VerticalOptions="Center" 
                                      HorizontalOptions="Center" 
-                                     Margin="20,60,20,20"
+                                     Margin="20,40,20,20"
                                      Spacing="16">
                             <StackLayout HorizontalOptions="Center">
                                 <!-- Premium Icon -->
-                                <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50"
-                                       Background="{AppThemeBinding Light=#F3E5F5, Dark=#2D1B4E}"
+                                <Frame WidthRequest="80" HeightRequest="80" CornerRadius="40"
+                                       Background="{AppThemeBinding Light={StaticResource AccentLight}, Dark={StaticResource AccentPurple}}"
                                        HorizontalOptions="Center" Padding="0">
-                                    <Label Text="📑" FontSize="42" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="📑" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Frame>
                                 
                                 <Label Text="No Documents Yet" 
@@ -117,19 +117,19 @@
                                        TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
                                        HorizontalOptions="Center" Margin="0,16,0,8"/>
                                 
-                                <Label Text="Add notes, journals, or import PDFs to build your knowledge base" 
+                                <Label Text="Add notes, journals, or import PDFs" 
                                        FontSize="14" 
                                        TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                                        HorizontalOptions="Center" 
                                        HorizontalTextAlignment="Center"
-                                       Margin="0,0,0,20"/>
+                                       Margin="0,0,0,24"/>
                                 
-                                <!-- Add Buttons -->
+                                <!-- Add Buttons - Cleaner -->
                                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
-                                    <Button Text="+ Note" 
+                                    <Button Text="Add Note" 
                                             Style="{StaticResource PrimaryButton}"
                                             Clicked="OnAddNoteClicked"/>
-                                    <Button Text="+ PDF" 
+                                    <Button Text="Import PDF" 
                                             Style="{StaticResource SecondaryButton}"
                                             Clicked="OnAddPdfClicked"/>
                                 </StackLayout>
