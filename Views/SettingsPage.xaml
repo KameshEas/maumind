@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage
     x:Class="MauMind.App.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -8,67 +8,43 @@
 
     <ScrollView>
         <StackLayout Padding="20">
-            <!-- Header -->
-            <Label Text="Settings" Style="{StaticResource PageTitle}" 
-                   HorizontalOptions="Center" Margin="0,0,0,20"/>
+            <!-- Header - Premium Left Aligned -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Text="Settings" Style="{StaticResource PageTitle}" 
+                       HorizontalOptions="Start" Margin="0,0,0,0"/>
+            </Grid>
 
-            <!-- Appearance - Theme Toggle -->
-            <Frame Style="{StaticResource Card}" Margin="0,0,0,15">
+            <!-- Appearance -->
+            <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackLayout>
-                    <Label Text="Appearance" Style="{StaticResource CardTitle}" 
-                           Margin="0,0,0,10"/>
+                    <Label Text="Appearance" Style="{StaticResource SectionHeader}" 
+                           Margin="0,0,0,16"/>
                     
                     <Grid ColumnDefinitions="*,Auto">
                         <StackLayout VerticalOptions="Center">
                             <Label Text="Dark Mode" Style="{StaticResource BodyText}"/>
-                            <Label Text="Switch between light and dark theme" Style="{StaticResource CaptionText}"/>
+                            <Label Text="Switch between themes" Style="{StaticResource CaptionText}"/>
                         </StackLayout>
-                    <Switch Grid.Column="1" IsToggled="{Binding IsDarkMode}" 
+                        <Switch Grid.Column="1" IsToggled="{Binding IsDarkMode}" 
                                 OnColor="{StaticResource Primary}" ThumbColor="White"/>
                     </Grid>
                 </StackLayout>
             </Frame>
 
-            <!-- Accessibility -->
-            <Frame Style="{StaticResource Card}" Margin="0,0,0,15">
+            <!-- Privacy and Security -->
+            <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackLayout>
-                    <Label Text="Accessibility" Style="{StaticResource CardTitle}" 
-                           Margin="0,0,0,10"/>
-                    
-                    <!-- High Contrast Mode -->
-                    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-                        <StackLayout VerticalOptions="Center">
-                            <Label Text="High Contrast Mode" Style="{StaticResource BodyText}"/>
-                            <Label Text="Enhanced colors for better visibility" Style="{StaticResource CaptionText}"/>
-                        </StackLayout>
-                        <Switch Grid.Column="1" IsToggled="{Binding HighContrastMode}" 
-                                OnColor="{StaticResource Primary}" ThumbColor="White"/>
-                    </Grid>
-                    
-                    <!-- Screen Reader Status -->
-                    <Grid ColumnDefinitions="*,Auto">
-                        <StackLayout VerticalOptions="Center">
-                            <Label Text="Screen Reader" Style="{StaticResource BodyText}"/>
-                            <Label Text="{Binding ScreenReaderStatus, StringFormat='Status: {0}'}" Style="{StaticResource CaptionText}"/>
-                        </StackLayout>
-                        <Button Grid.Column="1" Text="↻" FontSize="18" 
-                                Command="{Binding RefreshScreenReaderStatusCommand}"
-                                BackgroundColor="Transparent" TextColor="{StaticResource Primary}"
-                                WidthRequest="40" HeightRequest="40" Padding="0"/>
-                    </Grid>
-                </StackLayout>
-            </Frame>
-
-            <!-- Web Search -->
-            <Frame Style="{StaticResource Card}" Margin="0,0,0,15">
-                <StackLayout>
-                    <Label Text="Web Search" Style="{StaticResource CardTitle}" 
-                           Margin="0,0,0,10"/>
+                    <Label Text="Privacy and Security" Style="{StaticResource SectionHeader}" 
+                           Margin="0,0,0,16"/>
                     
                     <Grid ColumnDefinitions="*,Auto">
                         <StackLayout VerticalOptions="Center">
-                            <Label Text="Enable Web Search Fallback" Style="{StaticResource BodyText}"/>
-                            <Label Text="Search when no local data found" Style="{StaticResource CaptionText}"/>
+                            <Label Text="Web Search" Style="{StaticResource BodyText}"/>
+                            <Label Text="Search the web when no local results" Style="{StaticResource CaptionText}"/>
                         </StackLayout>
                         <Switch Grid.Column="1" IsToggled="{Binding WebSearchEnabled}" 
                                 OnColor="{StaticResource Primary}" ThumbColor="White"/>
@@ -76,181 +52,89 @@
                 </StackLayout>
             </Frame>
 
-            <!-- Quick Actions -->
-            <Frame Style="{StaticResource Card}" Margin="0,0,0,15">
+            <!-- AI Settings -->
+            <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackLayout>
-                    <Label Text="Quick Actions" Style="{StaticResource CardTitle}" 
-                           Margin="0,0,0,10"/>
-                    
-                    <Button Text="Reload AI Models" Command="{Binding ReloadModelsCommand}" 
-                            BackgroundColor="{StaticResource Primary}" TextColor="White" CornerRadius="10" Margin="0,5"/>
-                    
-                    <Button Text="Clear Cache" Command="{Binding ClearCacheCommand}" 
-                            BackgroundColor="{StaticResource Warning}" TextColor="White" CornerRadius="10" Margin="0,5"/>
-                </StackLayout>
-            </Frame>
-
-            <!-- Chat Settings -->
-            <Frame Style="{StaticResource Card}" Margin="0,0,0,15">
-                <StackLayout>
-                    <Label Text="Chat Settings" Style="{StaticResource CardTitle}" 
-                           Margin="0,0,0,10"/>
+                    <Label Text="AI Assistant" Style="{StaticResource SectionHeader}" 
+                           Margin="0,0,0,16"/>
                     
                     <Label Text="Response Creativity" Style="{StaticResource BodyText}"/>
                     <Slider Minimum="0" Maximum="1" Value="{Binding Temperature}" MinimumTrackColor="{StaticResource Primary}"/>
                     <Label Text="{Binding Temperature, StringFormat='Temperature: {0:F2}'}" Style="{StaticResource CaptionText}"/>
                     
                     <Label Text="Response Length" Style="{StaticResource BodyText}" 
-                           Margin="0,15,0,0"/>
+                           Margin="0,16,0,0"/>
                     <Slider Minimum="512" Maximum="2048" Value="{Binding MaxTokens}" MinimumTrackColor="{StaticResource Primary}"/>
                     <Label Text="{Binding MaxTokens, StringFormat='Max {0} tokens'}" Style="{StaticResource CaptionText}"/>
                 </StackLayout>
             </Frame>
 
             <!-- Storage -->
-            <Frame Style="{StaticResource Card}" Margin="0,0,0,15">
+            <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackLayout>
-                    <Label Text="Storage" Style="{StaticResource CardTitle}" 
-                           Margin="0,0,0,10"/>
+                    <Label Text="Storage" Style="{StaticResource SectionHeader}" 
+                           Margin="0,0,0,16"/>
                     
                     <Label Text="{Binding MemoryUsageMB, StringFormat='Memory: {0} MB'}" Style="{StaticResource BodyText}"/>
                     
-                    <Button Text="Open Models Folder" Command="{Binding OpenModelsFolderCommand}" 
-                            BackgroundColor="{StaticResource Primary}" TextColor="White" CornerRadius="10" Margin="0,10,0,0"/>
+                    <Button Text="Open Data Folder" Command="{Binding OpenModelsFolderCommand}" 
+                            Style="{StaticResource SecondaryButton}" Margin="0,12,0,0"/>
                 </StackLayout>
             </Frame>
 
-            <!-- Developer Mode - Hidden by default (enterprise-friendly) -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,0,0,15">
-                <Label Text="Need more options?" Style="{StaticResource CaptionText}" VerticalOptions="Center"/>
-                <Button Text="Enable Developer Mode" 
-                        BackgroundColor="Transparent" TextColor="{StaticResource Primary}" 
-                        FontSize="12" Padding="8,4"/>
-            </StackLayout>
-
-            <!-- Developer Settings - Only visible when Developer Mode is ON -->
-            <StackLayout IsVisible="{Binding DeveloperModeEnabled}">
-                <!-- Model Status -->
-                <Frame CornerRadius="12" Padding="15" 
-                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLightBrush}, Dark={StaticResource CardBackgroundDarkBrush}}" 
-                       Margin="0,0,0,15">
-                    <StackLayout>
-                        <Label Text="Model Status" FontAttributes="Bold" FontSize="16" 
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
-                               Margin="0,0,0,10"/>
-                        
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Embedding Model:" VerticalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                            <Label Grid.Column="1" Text="{Binding EmbeddingModelStatus}" TextColor="Green" FontAttributes="Bold"/>
-                        </Grid>
-                        
-                        <Grid ColumnDefinitions="*,Auto" Margin="0,5,0,0">
-                            <Label Text="Chat Model:" VerticalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                            <Label Grid.Column="1" Text="{Binding ChatModelStatus}" TextColor="Green" FontAttributes="Bold"/>
-                        </Grid>
-                    </StackLayout>
-                </Frame>
-
-                <!-- RAG Configuration -->
-                <Frame CornerRadius="12" Padding="15" 
-                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLightBrush}, Dark={StaticResource CardBackgroundDarkBrush}}" 
-                       Margin="0,0,0,15">
-                    <StackLayout>
-                        <Label Text="RAG Configuration" FontAttributes="Bold" FontSize="16" 
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
-                               Margin="0,0,0,10"/>
-                        
-                        <Label Text="Top K Results"
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                        <Slider Minimum="1" Maximum="10" Value="{Binding TopK}" MinimumTrackColor="#0078D4"/>
-                        <Label Text="{Binding TopK, StringFormat='Top {0} results'}"
-                               TextColor="{AppThemeBinding Light={StaticResource TextTertiaryLight}, Dark={StaticResource TextTertiaryDark}}"/>
-                        
-                        <Label Text="Chunk Size" Margin="0,10,0,0"
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                        <Slider Minimum="128" Maximum="1024" Value="{Binding ChunkSize}" MinimumTrackColor="#0078D4"/>
-                        <Label Text="{Binding ChunkSize, StringFormat='{0} characters'}"
-                               TextColor="{AppThemeBinding Light={StaticResource TextTertiaryLight}, Dark={StaticResource TextTertiaryDark}}"/>
-                        
-                        <Label Text="Chunk Overlap" Margin="0,10,0,0"
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                        <Slider Minimum="0" Maximum="200" Value="{Binding ChunkOverlap}" MinimumTrackColor="#0078D4"/>
-                        <Label Text="{Binding ChunkOverlap, StringFormat='{0} characters'}"
-                               TextColor="{AppThemeBinding Light={StaticResource TextTertiaryLight}, Dark={StaticResource TextTertiaryDark}}"/>
-                    </StackLayout>
-                </Frame>
-
-                <!-- Hardware -->
-                <Frame CornerRadius="12" Padding="15" 
-                       BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLightBrush}, Dark={StaticResource CardBackgroundDarkBrush}}" 
-                       Margin="0,0,0,15">
-                    <StackLayout>
-                        <Label Text="Hardware Acceleration" FontAttributes="Bold" FontSize="16" 
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
-                               Margin="0,0,0,10"/>
-                        
-                        <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Enable Hardware Acceleration" VerticalOptions="Center"
-                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                            <Switch Grid.Column="1" IsToggled="{Binding HardwareAccelerationEnabled}" OnColor="#0078D4"/>
-                        </Grid>
-                    </StackLayout>
-                </Frame>
-
-                <!-- Debug Info -->
-                <Frame CornerRadius="12" Padding="15" BackgroundColor="#FFF3E0" Margin="0,0,0,15">
-                    <StackLayout>
-                        <Label Text="Debug Info" FontAttributes="Bold" FontSize="16" TextColor="#E65100" Margin="0,0,0,10"/>
-                        <Label Text="{Binding ModelsDirectory}" FontSize="10" TextColor="#666" LineBreakMode="WordWrap"/>
-                        <Button Text="Refresh Memory" Command="{Binding RefreshMemoryUsageCommand}" 
-                                BackgroundColor="#E65100" TextColor="White" CornerRadius="10" Margin="0,10,0,0"/>
-                    </StackLayout>
-                </Frame>
-            </StackLayout>
-
             <!-- Data Management -->
-            <Frame CornerRadius="12" Padding="15" 
-                   BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLightBrush}, Dark={StaticResource CardBackgroundDarkBrush}}" 
-                   Margin="0,0,0,15">
+            <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackLayout>
-                    <Label Text="Data Management" FontAttributes="Bold" FontSize="16" 
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
-                           Margin="0,0,0,10"/>
-                    <Label Text="Backup and restore notes, logs, chat history" FontSize="12" 
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                           Margin="0,0,0,10"/>
+                    <Label Text="Data" Style="{StaticResource SectionHeader}" 
+                           Margin="0,0,0,16"/>
+                    <Label Text="Export or import your notes and settings" Style="{StaticResource CaptionText}" 
+                           Margin="0,0,0,12"/>
                     <Grid ColumnDefinitions="*,*">
                         <Button Grid.Column="0" Text="Export" Command="{Binding ExportDataCommand}" 
-                                BackgroundColor="#4CAF50" TextColor="White" CornerRadius="10" Margin="0,0,5,0"/>
+                                BackgroundColor="{StaticResource Success}" TextColor="White" CornerRadius="10" Margin="0,0,6,0"/>
                         <Button Grid.Column="1" Text="Import" Command="{Binding ImportDataCommand}" 
-                                BackgroundColor="#2196F3" TextColor="White" CornerRadius="10" Margin="5,0,0,0"/>
+                                BackgroundColor="{StaticResource Info}" TextColor="White" CornerRadius="10" Margin="6,0,0,0"/>
                     </Grid>
                 </StackLayout>
             </Frame>
 
             <!-- About - Premium Design -->
-            <Frame CornerRadius="12" Padding="15" 
-                   BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLightBrush}, Dark={StaticResource CardBackgroundDarkBrush}}">
+            <Frame Style="{StaticResource Card}">
                 <StackLayout>
-                    <Label Text="About" FontAttributes="Bold" FontSize="16" 
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}" 
-                           Margin="0,0,0,10"/>
-                    <Label Text="MauMind" FontAttributes="Bold" FontSize="20" TextColor="{StaticResource Primary}"/>
-                    <Label Text="Your Private AI Assistant" FontSize="14" 
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                    <Label Text="Version 1.0 (Beta)" FontSize="12" 
-                           TextColor="{AppThemeBinding Light={StaticResource TextTertiaryLight}, Dark={StaticResource TextTertiaryDark}}" 
-                           Margin="0,8,0,0"/>
+                    <Label Text="About" Style="{StaticResource SectionHeader}" 
+                           Margin="0,0,0,16"/>
                     
-                    <!-- Privacy Badge -->
-                    <Frame CornerRadius="8" Padding="8,4" BackgroundColor="{StaticResource SuccessLight}" 
+                    <!-- Brand -->
+                    <StackLayout Orientation="Horizontal" Spacing="12">
+                        <Frame WidthRequest="48" HeightRequest="48" CornerRadius="24"
+                               Background="{StaticResource Primary}" Padding="0">
+                            <Label Text="M" FontSize="20" FontAttributes="Bold" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <StackLayout VerticalOptions="Center">
+                            <Label Text="MauMind" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Primary}"/>
+                            <Label Text="Your Private AI Assistant" FontSize="13" 
+                                   TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+                        </StackLayout>
+                    </StackLayout>
+                    
+                    <Label Text="Version 1.0" FontSize="13" 
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}" 
+                           Margin="0,16,0,0"/>
+                    
+                    <!-- Privacy Badge - Premium -->
+                    <Frame CornerRadius="8" Padding="10,6" BackgroundColor="{StaticResource SuccessLight}" 
                            HorizontalOptions="Start" Margin="0,12,0,0">
-                        <Label Text="All data stays on your device" FontSize="11" TextColor="{StaticResource SuccessDark}"/>
+                        <StackLayout Orientation="Horizontal" Spacing="6">
+                            <Label Text="&#x2713;" FontSize="12" TextColor="{StaticResource SuccessDark}" FontAttributes="Bold"/>
+                            <Label Text="All data stays on your device" FontSize="12" TextColor="{StaticResource SuccessDark}"/>
+                        </StackLayout>
                     </Frame>
                 </StackLayout>
             </Frame>
+            
+            <!-- Bottom Spacing -->
+            <BoxView HeightRequest="40"/>
         </StackLayout>
     </ScrollView>
 

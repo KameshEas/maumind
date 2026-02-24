@@ -1,82 +1,78 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Premium Color Palette - Updated to v3.0 -->
+    <!-- Premium Color Palette - v4.0 Enterprise Edition -->
     <Color x:Key="PrimaryBlue">#5E6AD2</Color>
     <Color x:Key="PrimaryBlueDark">#3D3F8F</Color>
     <Color x:Key="PrimaryBlueLight">#8B8FE3</Color>
-    <Color x:Key="AccentPurple">#5B5FC7</Color>
-    <Color x:Key="AccentTeal">#00B7C3</Color>
-    <Color x:Key="SuccessGreen">#107C10</Color>
-    <Color x:Key="ErrorRed">#D13438</Color>
-    <Color x:Key="WarningOrange">#FF8C00</Color>
+    <Color x:Key="AccentPurple">#8B5CF6</Color>
+    <Color x:Key="AccentTeal">#14B8A6</Color>
+    <Color x:Key="SuccessGreen">#10B981</Color>
+    <Color x:Key="ErrorRed">#EF4444</Color>
+    <Color x:Key="WarningOrange">#F59E0B</Color>
 
     <!-- Light Theme -->
-    <Color x:Key="LightBackground">#FAFAFA</Color>
+    <Color x:Key="LightBackground">#F8F9FA</Color>
     <Color x:Key="LightSurface">#FFFFFF</Color>
     <Color x:Key="LightSurfaceGlass">#F5FFFFFF</Color>
-    <Color x:Key="LightTextPrimary">#1A1A1A</Color>
-    <Color x:Key="LightTextSecondary">#6B6B6B</Color>
-    <Color x:Key="LightTextTertiary">#9E9E9E</Color>
+    <Color x:Key="LightTextPrimary">#1A1A2E</Color>
+    <Color x:Key="LightTextSecondary">#6B7280</Color>
+    <Color x:Key="LightTextTertiary">#9CA3AF</Color>
 
-    <!-- Dark Theme -->
-    <Color x:Key="DarkBackground">#121212</Color>
-    <Color x:Key="DarkSurface">#1E1E1E</Color>
-    <Color x:Key="DarkSurfaceGlass">#401E1E1E</Color>
-    <Color x:Key="DarkTextPrimary">#FFFFFF</Color>
-    <Color x:Key="DarkTextSecondary">#A0A0A0</Color>
-    <Color x:Key="DarkTextTertiary">#6B6B6B</Color>
+    <!-- Dark Theme - Premium (matches Colors.xaml) -->
+    <Color x:Key="DarkBackground">#0F0F12</Color>
+    <Color x:Key="DarkSurface">#1A1A1E</Color>
+    <Color x:Key="DarkSurfaceElevated">#252529</Color>
+    <Color x:Key="DarkSurfaceGlass">#401A1A1E</Color>
+    <Color x:Key="DarkTextPrimary">#F9FAFB</Color>
+    <Color x:Key="DarkTextSecondary">#9CA3AF</Color>
+    <Color x:Key="DarkTextTertiary">#6B7280</Color>
 
-    <!-- Primary Button Gradient - Updated to v3.0 Indigo -->
-    <LinearGradientBrush x:Key="PrimaryButtonGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#5E6AD2" Offset="0"/>
-        <GradientStop Color="#3D3F8F" Offset="1"/>
-    </LinearGradientBrush>
-
-    <!-- User Bubble Gradient - Updated to v3.0 Indigo -->
-    <LinearGradientBrush x:Key="UserBubbleGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#5E6AD2" Offset="0"/>
-        <GradientStop Color="#3D3F8F" Offset="1"/>
-    </LinearGradientBrush>
-
-    <!-- Background Gradient -->
+    <!-- Background Gradient Light -->
     <LinearGradientBrush x:Key="BackgroundGradientLight" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FAFAFA" Offset="0"/>
-        <GradientStop Color="#F0F0F0" Offset="1"/>
+        <GradientStop Color="#F8F9FA" Offset="0"/>
+        <GradientStop Color="#F0F2F5" Offset="1"/>
     </LinearGradientBrush>
 
-    <!-- Glass Card -->
+    <!-- Background Gradient Dark -->
+    <LinearGradientBrush x:Key="BackgroundGradientDark" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#0F0F12" Offset="0"/>
+        <GradientStop Color="#1A1A1E" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Glass Card Style -->
     <Style x:Key="GlassCard" TargetType="Frame">
-        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="CornerRadius" Value="16"/>
         <Setter Property="Padding" Value="16"/>
         <Setter Property="HasShadow" Value="True"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}"/>
     </Style>
 
-    <!-- Primary Button -->
+    <!-- Primary Button - Solid (no gradient) -->
     <Style x:Key="PrimaryButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource PrimaryButtonGradient}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryBlue}"/>
         <Setter Property="TextColor" Value="White"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="CornerRadius" Value="25"/>
-        <Setter Property="Padding" Value="24,14"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="20,12"/>
     </Style>
 
     <!-- Secondary Button -->
     <Style x:Key="SecondaryButton" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}"/>
         <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="CornerRadius" Value="25"/>
-        <Setter Property="Padding" Value="24,14"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="20,12"/>
     </Style>
 
     <!-- Icon Button -->
     <Style x:Key="IconButton" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="TextColor" Value="{StaticResource PrimaryBlue}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="WidthRequest" Value="44"/>
         <Setter Property="HeightRequest" Value="44"/>
@@ -84,18 +80,19 @@
 
     <!-- Send Button -->
     <Style x:Key="SendButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource PrimaryButtonGradient}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryBlue}"/>
         <Setter Property="TextColor" Value="White"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="WidthRequest" Value="48"/>
-        <Setter Property="HeightRequest" Value="48"/>
-        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="WidthRequest" Value="44"/>
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="CornerRadius" Value="22"/>
     </Style>
 
     <!-- Modern Entry -->
     <Style x:Key="ModernEntry" TargetType="Entry">
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
     </Style>
 
     <!-- Settings Card -->
@@ -103,13 +100,15 @@
         <Setter Property="CornerRadius" Value="16"/>
         <Setter Property="Padding" Value="16"/>
         <Setter Property="Margin" Value="0,0,0,12"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}"/>
     </Style>
 
     <!-- Document Card -->
     <Style x:Key="DocumentCard" TargetType="Frame">
-        <Setter Property="CornerRadius" Value="12"/>
-        <Setter Property="Padding" Value="12"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Padding" Value="14"/>
         <Setter Property="Margin" Value="0,4"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}"/>
     </Style>
 
 </ResourceDictionary>

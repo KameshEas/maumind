@@ -3,11 +3,11 @@
     x:Class="MauMind.App.Views.PinEntryPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Secret Mode"
+    Title="PIN"
     Background="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
     <Grid>
-        <!-- Background Gradient -->
+        <!-- Premium Minimal Background -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" Offset="0" />
@@ -15,43 +15,43 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="30" Margin="30">
+        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="24" Margin="30">
             
-            <!-- Lock Icon -->
-            <Frame WidthRequest="100" HeightRequest="100" CornerRadius="50" 
+            <!-- Lock Icon - Clean -->
+            <Frame WidthRequest="80" HeightRequest="80" CornerRadius="40" 
                    Background="{AppThemeBinding Light={StaticResource PrimaryMuted}, Dark=#1A3A5C}"
                    HorizontalOptions="Center">
-                <Label x:Name="LockIcon" Text="🔒" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Label x:Name="LockIcon" Text="&#x1F512;" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Frame>
 
             <!-- Title -->
             <Label x:Name="TitleLabel"
                    Text="Enter PIN"
-                   FontSize="28"
+                   FontSize="24"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
 
             <!-- Subtitle -->
             <Label x:Name="SubtitleLabel"
-                   Text="Enter your 4-digit PIN to access Secret Mode"
+                   Text="Enter your 4-digit PIN to continue"
                    FontSize="14"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center"
                    TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
 
             <!-- PIN Display -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="15">
-                <Frame x:Name="Pin1" WidthRequest="20" HeightRequest="20" CornerRadius="10" 
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
+                <Frame x:Name="Pin1" WidthRequest="16" HeightRequest="16" CornerRadius="8" 
                        Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" 
                        Padding="0" HasShadow="False"/>
-                <Frame x:Name="Pin2" WidthRequest="20" HeightRequest="20" CornerRadius="10" 
+                <Frame x:Name="Pin2" WidthRequest="16" HeightRequest="16" CornerRadius="8" 
                        Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" 
                        Padding="0" HasShadow="False"/>
-                <Frame x:Name="Pin3" WidthRequest="20" HeightRequest="20" CornerRadius="10" 
+                <Frame x:Name="Pin3" WidthRequest="16" HeightRequest="16" CornerRadius="8" 
                        Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" 
                        Padding="0" HasShadow="False"/>
-                <Frame x:Name="Pin4" WidthRequest="20" HeightRequest="20" CornerRadius="10" 
+                <Frame x:Name="Pin4" WidthRequest="16" HeightRequest="16" CornerRadius="8" 
                        Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" 
                        Padding="0" HasShadow="False"/>
             </StackLayout>
@@ -59,13 +59,13 @@
             <!-- Error Message -->
             <Label x:Name="ErrorLabel"
                    Text=""
-                   FontSize="14"
+                   FontSize="13"
                    HorizontalOptions="Center"
                    TextColor="{StaticResource ErrorColor}"
                    IsVisible="False"/>
 
-            <!-- Number Pad -->
-            <Grid HorizontalOptions="Center" RowSpacing="15" ColumnSpacing="15">
+            <!-- Number Pad - Premium Clean -->
+            <Grid HorizontalOptions="Center" RowSpacing="12" ColumnSpacing="12">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -79,47 +79,45 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Row 1: 1 2 3 -->
-                <Button Grid.Row="0" Grid.Column="0" Text="1" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="0" Grid.Column="0" Text="1" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="1"/>
-                <Button Grid.Row="0" Grid.Column="1" Text="2" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="0" Grid.Column="1" Text="2" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="2"/>
-                <Button Grid.Row="0" Grid.Column="2" Text="3" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="0" Grid.Column="2" Text="3" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="3"/>
 
                 <!-- Row 2: 4 5 6 -->
-                <Button Grid.Row="1" Grid.Column="0" Text="4" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="1" Grid.Column="0" Text="4" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="4"/>
-                <Button Grid.Row="1" Grid.Column="1" Text="5" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="1" Grid.Column="1" Text="5" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="5"/>
-                <Button Grid.Row="1" Grid.Column="2" Text="6" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="1" Grid.Column="2" Text="6" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="6"/>
 
                 <!-- Row 3: 7 8 9 -->
-                <Button Grid.Row="2" Grid.Column="0" Text="7" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="2" Grid.Column="0" Text="7" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="7"/>
-                <Button Grid.Row="2" Grid.Column="1" Text="8" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="2" Grid.Column="1" Text="8" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="8"/>
-                <Button Grid.Row="2" Grid.Column="2" Text="9" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="2" Grid.Column="2" Text="9" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="9"/>
 
                 <!-- Row 4: Cancel 0 Backspace -->
-                <Button Grid.Row="3" Grid.Column="0" Text="✕" FontSize="20" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="3" Grid.Column="0" Text="&#x2715;" FontSize="18" WidthRequest="64" HeightRequest="64" 
                         BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                         Clicked="OnCancelClicked"/>
-                <Button Grid.Row="3" Grid.Column="1" Text="0" FontSize="24" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="3" Grid.Column="1" Text="0" FontSize="22" WidthRequest="64" HeightRequest="64" 
                         Style="{StaticResource NumberPadButton}" Clicked="OnNumberClicked" CommandParameter="0"/>
-                <Button Grid.Row="3" Grid.Column="2" Text="⌫" FontSize="20" WidthRequest="70" HeightRequest="70" 
+                <Button Grid.Row="3" Grid.Column="2" Text="&#x232B;" FontSize="18" WidthRequest="64" HeightRequest="64" 
                         BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
                         Clicked="OnBackspaceClicked"/>
             </Grid>
 
-            <!-- Action Buttons -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="20" Margin="0,20,0,0">
-                <Button x:Name="ForgotPinButton" Text="Forgot PIN?" FontSize="12" 
-                        BackgroundColor="Transparent" 
-                        TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
-                        Clicked="OnForgotPinClicked"/>
-            </StackLayout>
+            <!-- Forgot PIN -->
+            <Button x:Name="ForgotPinButton" Text="Forgot PIN?" FontSize="13" 
+                    BackgroundColor="Transparent" 
+                    TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
+                    Clicked="OnForgotPinClicked" Margin="0,16,0,0"/>
 
         </VerticalStackLayout>
     </Grid>

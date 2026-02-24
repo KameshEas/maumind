@@ -9,7 +9,7 @@
 
     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         
-        <!-- Background Gradient Effect -->
+        <!-- Clean Background -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
@@ -19,83 +19,92 @@
             </LinearGradientBrush>
         </Grid.Background>
 
+        <!-- Decorative Elements -->
+        <Ellipse WidthRequest="300" HeightRequest="300"
+                 HorizontalOptions="Start" VerticalOptions="Start"
+                 Margin="-100,-100,0,0"
+                 Opacity="0.05">
+            <Ellipse.Fill>
+                <SolidColorBrush Color="{StaticResource Primary}"/>
+            </Ellipse.Fill>
+        </Ellipse>
+
+        <Ellipse WidthRequest="200" HeightRequest="200"
+                 HorizontalOptions="End" VerticalOptions="End"
+                 Margin="0,0,-60,-60"
+                 Opacity="0.04">
+            <Ellipse.Fill>
+                <SolidColorBrush Color="{StaticResource Accent}"/>
+            </Ellipse.Fill>
+        </Ellipse>
+
         <VerticalStackLayout HorizontalOptions="Center" 
                             VerticalOptions="Center"
-                            Spacing="30">
+                            Spacing="20">
             
-            <!-- Animated Logo Container -->
-            <Grid HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="150" HeightRequest="150">
+            <!-- Logo Container -->
+            <Grid HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="100" HeightRequest="100">
                 
-                <!-- Pulsing Circle Background -->
-                <Ellipse x:Name="PulsingCircle"
-                         WidthRequest="120" 
-                         HeightRequest="120"
+                <!-- Subtle Glow (pulsing) -->
+                <Ellipse x:Name="PulsingCircle" WidthRequest="80" 
+                         HeightRequest="80"
                          HorizontalOptions="Center"
                          VerticalOptions="Center"
-                         Scale="0.8"
-                         Opacity="0.3">
+                         Opacity="0.15">
                     <Ellipse.Fill>
                         <RadialGradientBrush>
-                            <GradientStop Color="{StaticResource PrimaryColor}" Offset="0" />
+                            <GradientStop Color="{StaticResource Primary}" Offset="0" />
                             <GradientStop Color="Transparent" Offset="1" />
                         </RadialGradientBrush>
                     </Ellipse.Fill>
                 </Ellipse>
 
-                <!-- Logo Image -->
-                <Image x:Name="LogoImage"
-                       Source="logo.png"
-                       WidthRequest="100"
-                       HeightRequest="100"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       Aspect="AspectFit"
-                       Opacity="0" />
+                <!-- Logo -->
+                <Frame x:Name="LogoImage" WidthRequest="64" HeightRequest="64" CornerRadius="32"
+                       Background="{StaticResource Primary}" Padding="0"
+                       HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="M" FontSize="28" FontAttributes="Bold" TextColor="White"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Frame>
             </Grid>
 
             <!-- App Name -->
-            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
                 <Label x:Name="AppNameLabel"
                        Text="MauMind"
-                       FontSize="36"
+                       FontSize="28"
                        FontAttributes="Bold"
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
-                       Opacity="0" />
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
 
                 <!-- Tagline -->
                 <Label x:Name="TaglineLabel"
-                       Text="Your AI Assistant"
-                       FontSize="16"
+                       Text="Your Private AI Assistant"
+                       FontSize="14"
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"
-                       Opacity="0" />
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
             </VerticalStackLayout>
 
-            <!-- Loading Indicator -->
+            <!-- Loading -->
             <StackLayout x:Name="LoadingStack" 
                          HorizontalOptions="Center" 
                          Spacing="8"
-                         Opacity="0">
+                         Margin="0,24,0,0">
                 <ActivityIndicator x:Name="LoadingIndicator"
                                    IsRunning="True"
-                                   Color="{StaticResource PrimaryColor}"
-                                   WidthRequest="24"
-                                   HeightRequest="24"/>
-                <Label Text="Loading..."
-                       FontSize="14"
-                       TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
-                       HorizontalOptions="Center"/>
+                                   Color="{StaticResource Primary}"
+                                   WidthRequest="20"
+                                   HeightRequest="20"/>
             </StackLayout>
 
-            <!-- Version Info -->
-            <Label x:Name="VersionLabel"
-                   Text="v1.0"
-                   FontSize="12"
-                   HorizontalOptions="Center"
-                   TextColor="{AppThemeBinding Light={StaticResource LightTextTertiary}, Dark={StaticResource DarkTextTertiary}}"
-                   Opacity="0"
-                   Margin="0,20,0,0"/>
+                 <!-- Version label -->
+                 <Label x:Name="VersionLabel"
+                     Text="v1.0"
+                     FontSize="12"
+                     Opacity="0.6"
+                     HorizontalOptions="Center"
+                     Margin="0,6,0,0"
+                     TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
 
         </VerticalStackLayout>
 

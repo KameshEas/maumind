@@ -115,9 +115,9 @@ public class VoiceService : IVoiceService, IDisposable
 #if ANDROID
             try
             {
-                var tts = Android.App.Application.Context.GetSystemService(Android.Content.Context.TextToSpeechService) 
-                    as Android.Speech.tts;
-                tts?.Stop();
+                // Platform-specific TTS stopping can be implemented here if a TextToSpeech
+                // instance is available via DI. Avoiding direct calls to platform APIs
+                // here prevents compilation issues across SDK versions.
             }
             catch { }
 #endif

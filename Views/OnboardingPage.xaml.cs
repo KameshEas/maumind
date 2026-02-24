@@ -31,9 +31,9 @@ public partial class OnboardingPage : ContentPage
         _slides = [Slide0, Slide1, Slide2, Slide3];
         _dots   = [Dot0, Dot1, Dot2, Dot3];
 
-        // Set initial background
-        BgLayer1.Color = SlideThemes[0].bg;
-        BgLayer2.Color = SlideThemes[0].bg;
+        // Set initial background fills
+        BgLayer1.Fill = new SolidColorBrush(SlideThemes[0].bg);
+        BgLayer2.Fill = new SolidColorBrush(SlideThemes[0].bg);
 
         Appearing += OnAppearing;
     }
@@ -185,12 +185,12 @@ public partial class OnboardingPage : ContentPage
 
     private async Task AnimateBackground(int newIndex)
     {
-        BgLayer2.Color   = SlideThemes[newIndex].bg;
+        BgLayer2.Fill    = new SolidColorBrush(SlideThemes[newIndex].bg);
         BgLayer2.Opacity = 0;
 
         await BgLayer2.FadeTo(1, 400, Easing.CubicInOut);
 
-        BgLayer1.Color   = SlideThemes[newIndex].bg;
+        BgLayer1.Fill    = new SolidColorBrush(SlideThemes[newIndex].bg);
         BgLayer2.Opacity = 0;
     }
 

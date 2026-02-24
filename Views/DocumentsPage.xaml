@@ -1,69 +1,65 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage
     x:Class="MauMind.App.Views.DocumentsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Documents"
-    Background="{AppThemeBinding Light={StaticResource BackgroundGradientLight}, Dark={StaticResource DarkBackground}}">
+    Background="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <!-- Premium Header -->
-        <Frame Grid.Row="0" Margin="16,16,16,8" CornerRadius="20" Padding="16,12"
-               Background="{AppThemeBinding Light={StaticResource LightSurfaceGlass}, Dark={StaticResource DarkSurfaceGlass}}"
-               HasShadow="True">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <!-- Back Button (visible when in folder) -->
-                <Button Grid.Column="0" Text="←" FontSize="18" 
-                        BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
-                        WidthRequest="36" HeightRequest="36" Padding="0"
-                        IsVisible="{Binding CurrentFolder, Converter={StaticResource NotNullConverter}}"
-                        Command="{Binding ShowAllDocumentsCommand}"/>
-                
-                <!-- Icon -->
-                <Frame Grid.Column="0" WidthRequest="44" HeightRequest="44" CornerRadius="22"
-                       Background="{StaticResource Accent}" Padding="0"
-                       IsVisible="{Binding CurrentFolder, Converter={StaticResource IsNullConverter}}">
-                    <Label Text="📑" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
-                </Frame>
-                
-                <!-- Title & Path -->
-                <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="12,0">
-                    <StackLayout Orientation="Horizontal" Spacing="8">
-                        <Label Text="Documents" Style="{StaticResource CardTitle}"
-                               TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
-                        <!-- Document count badge -->
-                        <Frame CornerRadius="10" Padding="8,2" Background="{StaticResource PrimaryMuted}" VerticalOptions="Center">
-                            <Label Text="{Binding DocumentCount}" FontSize="12" TextColor="{StaticResource Primary}"/>
-                        </Frame>
-                    </StackLayout>
-                    <Label Text="Your knowledge base" Style="{StaticResource CaptionText}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+        <!-- Premium Minimal Header -->
+        <Grid Grid.Row="0" Margin="20,16,20,8" HeightRequest="56">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Back Button (visible when in folder) -->
+            <Button Grid.Column="0" Text="&#x2190;" FontSize="18" 
+                    BackgroundColor="Transparent" TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
+                    WidthRequest="36" HeightRequest="36" Padding="0"
+                    IsVisible="{Binding CurrentFolder, Converter={StaticResource NotNullConverter}}"
+                    Command="{Binding ShowAllDocumentsCommand}"/>
+            
+            <!-- Icon -->
+            <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                   Background="{StaticResource Accent}" Padding="0"
+                   IsVisible="{Binding CurrentFolder, Converter={StaticResource IsNullConverter}}">
+                <Label Text="&#x1F4C4;" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
+            
+            <!-- Title & Path -->
+            <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="14,0,0,0">
+                <StackLayout Orientation="Horizontal" Spacing="8">
+                    <Label Text="Documents" Style="{StaticResource CardTitle}"
+                           TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                    <!-- Document count badge -->
+                    <Frame CornerRadius="8" Padding="6,2" Background="{StaticResource PrimaryMuted}" VerticalOptions="Center">
+                        <Label Text="{Binding DocumentCount}" FontSize="11" TextColor="{StaticResource Primary}" FontAttributes="Bold"/>
+                    </Frame>
                 </StackLayout>
+                <Label Text="Your knowledge base" Style="{StaticResource CaptionText}"
+                       TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
+            </StackLayout>
 
-                <!-- Actions -->
-                <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="4">
-                    <Button Text="🔍" FontSize="16"
-                            BackgroundColor="Transparent" TextColor="{StaticResource Gray500}"
-                            WidthRequest="40" HeightRequest="40" Padding="0"/>
-                    <Button Text="+" FontSize="20"
-                            BackgroundColor="{StaticResource Primary}" TextColor="White"
-                            WidthRequest="40" HeightRequest="40" Padding="0" CornerRadius="20"
-                            Clicked="OnNewFolderClicked"/>
-                </StackLayout>
-            </Grid>
-        </Frame>
+            <!-- Actions -->
+            <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                <Button Text="&#x1F50D;" FontSize="16"
+                        BackgroundColor="Transparent" TextColor="{StaticResource Gray500}"
+                        WidthRequest="40" HeightRequest="40" Padding="0"/>
+                <Button Text="+" FontSize="20" FontAttributes="Bold"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        WidthRequest="40" HeightRequest="40" Padding="0" CornerRadius="20"
+                        Clicked="OnNewFolderClicked"/>
+            </StackLayout>
+        </Grid>
 
         <!-- Main Content -->
-        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always" Padding="16,8">
-            <StackLayout x:Name="MainContentStack" Spacing="12">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always" Padding="20,8">
+            <StackLayout x:Name="MainContentStack" Spacing="16">
                 <!-- Folders Section (visible at root) -->
-                <StackLayout x:Name="FoldersSection" Spacing="8" 
+                <StackLayout x:Name="FoldersSection" Spacing="12" 
                              IsVisible="{Binding CurrentFolder, Converter={StaticResource IsNullConverter}}">
                     <Label Text="Folders" Style="{StaticResource Title}"
                            Margin="4,0"/>
@@ -72,8 +68,8 @@
                     <StackLayout x:Name="FoldersStack" Spacing="8"/>
 
                     <!-- Uncategorized -->
-                    <Frame x:Name="UncategorizedCard" CornerRadius="12" Padding="12,10"
-                           BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2A2A2A}"
+                    <Frame x:Name="UncategorizedCard" CornerRadius="12" Padding="14,12"
+                           BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurface}}"
                            HasShadow="False" Margin="0,4">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnUncategorizedTapped"/>
@@ -84,22 +80,16 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="📄" FontSize="20" VerticalOptions="Center"/>
+                            <Label Grid.Column="0" Text="&#x1F4C4;" FontSize="18" VerticalOptions="Center"/>
                             <Label Grid.Column="1" Text="Uncategorized" FontSize="15" VerticalOptions="Center"
                                    TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"
                                    Margin="12,0,0,0"/>
-                            <Label Grid.Column="2" Text="{Binding UncategorizedCount, StringFormat='({0})'}"
-                                   FontSize="12" VerticalOptions="Center"
+                            <Label Grid.Column="2" Text="{Binding UncategorizedCount, StringFormat='{0}'}"
+                                   FontSize="13" VerticalOptions="Center" FontAttributes="Bold"
                                    TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
                         </Grid>
                     </Frame>
                 </StackLayout>
-
-                <!-- Separator -->
-                <BoxView x:Name="FolderSeparator" HeightRequest="1" 
-                         Color="{AppThemeBinding Light=#E0E0E0, Dark=#404040}"
-                         IsVisible="{Binding CurrentFolder, Converter={StaticResource IsNullConverter}}"
-                         Margin="0,8"/>
 
                 <!-- Documents Section -->
                 <StackLayout x:Name="DocumentsSection" Spacing="8">
@@ -111,28 +101,27 @@
                         <StackLayout x:Name="DocumentsEmptyState" 
                                      VerticalOptions="Center" 
                                      HorizontalOptions="Center" 
-                                     Margin="20,40,20,20"
-                                     Spacing="16">
-                            <StackLayout HorizontalOptions="Center">
+                                     Margin="0,40,0,20"
+                                     Spacing="20">
+                            <StackLayout HorizontalOptions="Center" Spacing="8">
                                 <!-- Premium Icon -->
-                                <Frame WidthRequest="80" HeightRequest="80" CornerRadius="40"
+                                <Frame WidthRequest="64" HeightRequest="64" CornerRadius="32"
                                        Background="{AppThemeBinding Light={StaticResource AccentLight}, Dark={StaticResource AccentPurple}}"
                                        HorizontalOptions="Center" Padding="0">
-                                    <Label Text="📑" FontSize="32" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="&#x1F4C1;" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Frame>
                                 
-                                <Label Text="No Documents Yet" 
+                                <Label Text="No documents yet" 
                                        Style="{StaticResource Heading}"
-                                       HorizontalOptions="Center" Margin="0,16,0,8"/>
+                                       HorizontalOptions="Center" Margin="0,8,0,0"/>
                                 
-                                <Label Text="Add notes, journals, or import PDFs" 
+                                <Label Text="Add your first note or import a PDF" 
                                        Style="{StaticResource BodySecondary}"
                                        HorizontalOptions="Center" 
-                                       HorizontalTextAlignment="Center"
-                                       Margin="0,0,0,24"/>
+                                       HorizontalTextAlignment="Center"/>
                                 
-                                <!-- Add Buttons - Cleaner -->
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12">
+                                <!-- Add Buttons -->
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="12" Margin="0,20,0,0">
                                     <Button Text="Add Note" 
                                             Style="{StaticResource PrimaryButton}"
                                             Clicked="OnAddNoteClicked"/>
@@ -148,7 +137,7 @@
         </ScrollView>
 
         <!-- Premium FAB for Adding -->
-        <Grid Grid.Row="2" Margin="16,8,16,20">
+        <Grid Grid.Row="2" Margin="20,8,20,24">
             <Button Text="+ Add Document" 
                     Style="{StaticResource PrimaryButton}"
                     HorizontalOptions="Center"

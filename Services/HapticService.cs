@@ -55,7 +55,7 @@ public class HapticService : IHapticService
         try
         {
 #if ANDROID
-            Android.os.Vibrator vibrator = (Android.os.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
+            var vibrator = (Android.OS.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
             if (vibrator != null && vibrator.HasVibrator)
             {
                 vibrator.Vibrate(10);
@@ -75,7 +75,7 @@ public class HapticService : IHapticService
         try
         {
 #if ANDROID
-            Android.os.Vibrator vibrator = (Android.os.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
+            var vibrator = (Android.OS.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
             if (vibrator != null && vibrator.HasVibrator)
             {
                 vibrator.Vibrate(25);
@@ -95,7 +95,7 @@ public class HapticService : IHapticService
         try
         {
 #if ANDROID
-            Android.os.Vibrator vibrator = (Android.os.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
+            var vibrator = (Android.OS.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
             if (vibrator != null && vibrator.HasVibrator)
             {
                 vibrator.Vibrate(50);
@@ -152,7 +152,7 @@ public class HapticService : IHapticService
         try
         {
 #if ANDROID
-            Android.os.Vibrator vibrator = (Android.os.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
+            var vibrator = (Android.OS.Vibrator)Android.App.Application.Context.GetSystemService(Android.Content.Context.VibratorService);
             if (vibrator != null && vibrator.HasVibrator)
             {
                 vibrator.Vibrate(milliseconds);
