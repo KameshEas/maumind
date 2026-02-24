@@ -99,8 +99,9 @@ public partial class SplashPage : ContentPage
         // Check if we should show onboarding
         if (_firstLaunchService.IsFirstLaunch && !_firstLaunchService.IsOnboardingComplete)
         {
-            // Navigate to onboarding
-            await Navigation.PushAsync(new OnboardingPage());
+            // Show onboarding as the new main page inside a NavigationPage
+            Application.Current!.MainPage = new NavigationPage(new OnboardingPage());
+            await Task.CompletedTask;
         }
         else
         {

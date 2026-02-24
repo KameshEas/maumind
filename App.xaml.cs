@@ -30,6 +30,8 @@ public partial class App : Application
         
         // Services
         services.AddSingleton<IEmbeddingService, EmbeddingService>();
+        // Accessibility
+        services.AddSingleton<IAccessibilityService, AccessibilityService>();
         services.AddSingleton<IVectorStore, VectorStore>();
         services.AddSingleton<IDocumentService, DocumentService>();
         services.AddSingleton<IDocumentScanService, DocumentScanService>();
