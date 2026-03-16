@@ -15,7 +15,7 @@ namespace MauMind.App.Services;
 /// 3. Combine and rank results from both approaches
 /// 4. Generate intelligent answer based on best match
 /// </summary>
-public class HybridChatService : IChatService, IDisposable
+public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
 {
     private readonly IVectorStore _vectorStore;
     private readonly DatabaseService _databaseService;
@@ -33,6 +33,25 @@ public class HybridChatService : IChatService, IDisposable
     {
         _vectorStore = vectorStore;
         _databaseService = databaseService;
+    }
+
+    public void Dispose()
+    {
+        // No unmanaged resources currently, but provide for future cleanup
+        _isModelLoaded = false;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        try
+        {
+            _isModelLoaded = false;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[HybridChatService] DisposeAsync error: {ex.Message}");
+        }
+        return ValueTask.CompletedTask;
     }
     
     public async Task LoadModelAsync(IProgress<int>? progress = null)
@@ -501,7 +520,6 @@ public class HybridChatService : IChatService, IDisposable
     public async Task ClearHistoryAsync() =>
         await _databaseService.ClearChatMessagesAsync();
     
-    public void Dispose() { }
 }
 
 public enum ResultSource

@@ -5,7 +5,7 @@ namespace MauMind.App.Services;
 /// <summary>
 /// Manages downloading, loading, and switching between ONNX language models.
 /// </summary>
-public class ModelManager : IModelManager, IDisposable
+public class ModelManager : IModelManager, IDisposable, IAsyncDisposable
 {
     private const string PrefKey = "active_model_id";
 
@@ -210,4 +210,17 @@ public class ModelManager : IModelManager, IDisposable
     }
 
     public void Dispose() => _http.Dispose();
+
+    public ValueTask DisposeAsync()
+    {
+        try
+        {
+            _http.Dispose();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ModelManager] DisposeAsync error: {ex.Message}");
+        }
+        return ValueTask.CompletedTask;
+    }
 }

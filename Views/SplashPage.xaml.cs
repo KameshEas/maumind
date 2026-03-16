@@ -9,13 +9,13 @@ public partial class SplashPage : ContentPage
     private readonly IFirstLaunchService _firstLaunchService;
     private bool _isNavigating = false;
 
-    public SplashPage()
+    public SplashPage(IFirstLaunchService firstLaunchService)
     {
         InitializeComponent();
-        
-        // Get the first launch service
-        _firstLaunchService = App.GetService<IFirstLaunchService>();
-        
+
+        // Injected first launch service
+        _firstLaunchService = firstLaunchService;
+
         // Start animations when page appears
         Appearing += OnPageAppearing;
     }
@@ -99,8 +99,9 @@ public partial class SplashPage : ContentPage
         // Check if we should show onboarding
         if (_firstLaunchService.IsFirstLaunch && !_firstLaunchService.IsOnboardingComplete)
         {
-            // Show onboarding as the new main page inside a NavigationPage
-            Application.Current!.MainPage = new NavigationPage(new OnboardingPage());
+            // Show onboarding as the new main page inside a NavigationPage (resolve via DI)
+            var onboarding = App.Services.GetRequiredService<OnboardingPage>();
+            Application.Current!.MainPage = new NavigationPage(onboarding);
             await Task.CompletedTask;
         }
         else

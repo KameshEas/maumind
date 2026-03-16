@@ -7,10 +7,10 @@ public partial class NoteEditorPage : ContentPage
 {
     private readonly NoteEditorViewModel _viewModel;
 
-    public NoteEditorPage(int? documentId = null, int? folderId = null, string? initialTitle = null, string? initialContent = null)
+    public NoteEditorPage(NoteEditorViewModel viewModel, int? documentId = null, int? folderId = null, string? initialTitle = null, string? initialContent = null)
     {
         InitializeComponent();
-        _viewModel = App.GetService<NoteEditorViewModel>();
+        _viewModel = viewModel;
         BindingContext = _viewModel;
 
         // Initialize with document or folder

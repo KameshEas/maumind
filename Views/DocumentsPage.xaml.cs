@@ -2,6 +2,7 @@ using MauMind.App.Models;
 using MauMind.App.Services;
 using MauMind.App.ViewModels;
 using Microsoft.Maui.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MauMind.App.Views;
 
@@ -12,14 +13,15 @@ public partial class DocumentsPage : ContentPage
     private readonly IDocumentService _documentService;
     private readonly IFolderService _folderService;
 
-    public DocumentsPage()
+    public DocumentsPage(DocumentsViewModel viewModel, IAnimationService animationService,
+        IDocumentService documentService, IFolderService folderService)
     {
         InitializeComponent();
 
-        _viewModel = App.GetService<DocumentsViewModel>();
-        _animationService = App.GetService<IAnimationService>();
-        _documentService = App.GetService<IDocumentService>();
-        _folderService = App.GetService<IFolderService>();
+        _viewModel = viewModel;
+        _animationService = animationService;
+        _documentService = documentService;
+        _folderService = folderService;
         BindingContext = _viewModel;
 
         Loaded += async (s, e) =>
@@ -461,8 +463,8 @@ public partial class DocumentsPage : ContentPage
 
     private async Task ShowAddNoteDialog()
     {
-        // Open the AI-powered note editor
-        var editorPage = new NoteEditorPage(folderId: _viewModel.CurrentFolder?.Id);
+        // Open the AI-powered note editor (created via DI so dependencies are injected)
+        var editorPage = ActivatorUtilities.CreateInstance<NoteEditorPage>(App.Services, _viewModel.CurrentFolder?.Id);
         await Navigation.PushModalAsync(editorPage);
 
         // Refresh after editor closes
@@ -473,8 +475,8 @@ public partial class DocumentsPage : ContentPage
 
     private async Task EditDocument(Document doc)
     {
-        // Open the AI-powered note editor with existing document
-        var editorPage = new NoteEditorPage(documentId: doc.Id);
+        // Open the AI-powered note editor with existing document (DI + runtime parameter)
+        var editorPage = ActivatorUtilities.CreateInstance<NoteEditorPage>(App.Services, doc.Id);
         await Navigation.PushModalAsync(editorPage);
 
         // Refresh after editor closes

@@ -3,7 +3,7 @@ using MauMind.App.Models;
 
 namespace MauMind.App.Services;
 
-public class VectorStore : IVectorStore
+public class VectorStore : IVectorStore, IAsyncDisposable
 {
     private readonly DatabaseService _databaseService;
     private readonly IEmbeddingService _embeddingService;
@@ -171,5 +171,24 @@ public class VectorStore : IVectorStore
         var floats = new float[bytes.Length / sizeof(float)];
         Buffer.BlockCopy(bytes, 0, floats, 0, bytes.Length);
         return floats;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_embeddingService is IAsyncDisposable asyncDisp)
+            {
+                await asyncDisp.DisposeAsync();
+            }
+            else if (_embeddingService is IDisposable disp)
+            {
+                disp.Dispose();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error disposing VectorStore dependencies: {ex.Message}");
+        }
     }
 }

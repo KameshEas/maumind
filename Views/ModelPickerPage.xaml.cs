@@ -8,10 +8,10 @@ public partial class ModelPickerPage : ContentPage
     private readonly IModelManager _modelManager;
     private CancellationTokenSource? _downloadCts;
 
-    public ModelPickerPage()
+    public ModelPickerPage(IModelManager modelManager)
     {
         InitializeComponent();
-        _modelManager = App.GetService<IModelManager>();
+        _modelManager = modelManager;
         _modelManager.ModelChanged += OnModelChanged;
     }
 

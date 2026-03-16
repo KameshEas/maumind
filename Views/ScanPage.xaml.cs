@@ -8,12 +8,12 @@ public partial class ScanPage : ContentPage
     private readonly IDocumentService _documentService;
     private string? _currentImagePath;
 
-    public ScanPage()
+    public ScanPage(IDocumentScanService scanService, IDocumentService documentService)
     {
         InitializeComponent();
-        
-        _scanService = App.GetService<IDocumentScanService>();
-        _documentService = App.GetService<IDocumentService>();
+
+        _scanService = scanService;
+        _documentService = documentService;
     }
 
     private void OnBackClicked(object? sender, EventArgs e)

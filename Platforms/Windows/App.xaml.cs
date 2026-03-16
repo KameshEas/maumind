@@ -17,6 +17,22 @@ public partial class App : MauiWinUIApplication
 	public App()
 	{
 		this.InitializeComponent();
+
+		// Register for Suspending event to ensure services are disposed on shutdown
+		this.Suspending += OnSuspending;
+	}
+
+	private void OnSuspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+	{
+		try
+		{
+			var mauiApp = Microsoft.Maui.Controls.Application.Current as MauMind.App.App;
+			if (mauiApp != null)
+			{
+				_ = mauiApp.DisposeServicesAsync();
+			}
+		}
+		catch { }
 	}
 
 	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();

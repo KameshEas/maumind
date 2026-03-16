@@ -14,6 +14,7 @@ public partial class ChatViewModel : ObservableObject
     private readonly IWebSearchService _webSearchService;
     private readonly IFollowUpService _followUpService;
     private CancellationTokenSource? _cts;
+    private readonly CommunityToolkit.Mvvm.Messaging.IMessenger _messenger;
 
     // Web search confirmation state
     [ObservableProperty] private bool _isWebSearchPending;
@@ -28,22 +29,13 @@ public partial class ChatViewModel : ObservableObject
     // Last user query (for follow-up generation)
     private string _lastUserQuery = string.Empty;
 
-    // Event to notify view to render web confirmation card
-    public event EventHandler<string>? WebSearchConfirmationRequested;
-    public event EventHandler? WebSearchDenied;
-
-    // Event to notify view to refresh follow-up chips
-    public event EventHandler<List<string>>? FollowUpQuestionsReady;
-
-    // Event fired when streaming finishes — view does cursor blink-out
-    public event EventHandler? StreamingCompleted;
+    // Communication to the view is done via IMessenger (see MessengerMessages)
     
     [ObservableProperty]
     private ObservableCollection<ChatMessage> _messages = new();
     
     [ObservableProperty]
     private string _userInput = string.Empty;
-    
     [ObservableProperty]
     private bool _isProcessing;
     
@@ -61,13 +53,14 @@ public partial class ChatViewModel : ObservableObject
     
     public ChatViewModel(IChatService chatService, IVectorStore vectorStore,
         IErrorHandlingService errorHandlingService, IWebSearchService webSearchService,
-        IFollowUpService followUpService)
+        IFollowUpService followUpService, CommunityToolkit.Mvvm.Messaging.IMessenger messenger)
     {
         _chatService = chatService;
         _vectorStore = vectorStore;
         _errorHandlingService = errorHandlingService;
         _webSearchService = webSearchService;
         _followUpService = followUpService;
+        _messenger = messenger;
     }
     
     public async Task InitializeAsync()
@@ -85,11 +78,11 @@ public partial class ChatViewModel : ObservableObject
             IsModelsLoaded = true;
             StatusMessage = "Ready";
             
-            // Load chat history
+            // Load chat history (marshal to main thread)
             var history = await _chatService.GetChatHistoryAsync();
             foreach (var message in history)
             {
-                Messages.Add(message);
+                MainThread.BeginInvokeOnMainThread(() => Messages.Add(message));
             }
             
             // Add welcome message if no history
@@ -101,7 +94,7 @@ public partial class ChatViewModel : ObservableObject
                     IsUser = false,
                     Timestamp = DateTime.UtcNow
                 };
-                Messages.Add(welcomeMessage);
+                MainThread.BeginInvokeOnMainThread(() => Messages.Add(welcomeMessage));
                 await _chatService.SaveMessageAsync(welcomeMessage);
             }
         }
@@ -116,18 +109,18 @@ public partial class ChatViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(UserInput) || IsProcessing)
             return;
-        
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send<MauMind.App.Messages.StreamingCompletedMessage, string>(new MauMind.App.Messages.StreamingCompletedMessage(), string.Empty);
         var userMessage = UserInput.Trim();
         UserInput = string.Empty;
         
-        // Add user message to chat
+        // Add user message to chat (marshal to UI thread)
         var userMsg = new ChatMessage
         {
             Content = userMessage,
             IsUser = true,
             Timestamp = DateTime.UtcNow
         };
-        Messages.Add(userMsg);
+        MainThread.BeginInvokeOnMainThread(() => Messages.Add(userMsg));
         await _chatService.SaveMessageAsync(userMsg);
         
         // Process response
@@ -171,7 +164,7 @@ public partial class ChatViewModel : ObservableObject
                 IsUser = false,
                 Timestamp = DateTime.UtcNow
             };
-            Messages.Add(assistantMsg);
+            MainThread.BeginInvokeOnMainThread(() => Messages.Add(assistantMsg));
             
             // Stream response with batched UI updates (80ms) and cursor
             var responseBuilder  = new System.Text.StringBuilder();
@@ -188,10 +181,8 @@ public partial class ChatViewModel : ObservableObject
                 var display = withCursor
                     ? responseBuilder + "▋"
                     : responseBuilder.ToString();
-                assistantMsg.Content = display;
-                var idx = Messages.Count - 1;
-                Messages.RemoveAt(idx);
-                Messages.Add(assistantMsg);
+                // Update content in-place on UI thread to avoid collection churn
+                MainThread.BeginInvokeOnMainThread(() => assistantMsg.Content = display);
             }
 
             await foreach (var token in _chatService.GetStreamingResponseAsync(userMessage, _cts.Token))
@@ -214,31 +205,38 @@ public partial class ChatViewModel : ObservableObject
 
             if (webSearchNeeded)
             {
-                // Remove empty placeholder message
-                if (Messages.Count > 0 && !Messages[^1].IsUser && string.IsNullOrEmpty(Messages[^1].Content))
-                    Messages.RemoveAt(Messages.Count - 1);
+                // Remove empty placeholder message if still present
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    if (Messages.Count > 0 && !Messages[^1].IsUser && string.IsNullOrEmpty(Messages[^1].Content))
+                        Messages.RemoveAt(Messages.Count - 1);
+                });
 
                 IsProcessing = false;
                 RequestWebSearch(userMessage);
                 return;
             }
 
+
             // Final flush without cursor — clean text
             FlushToUI(withCursor: false);
-            assistantMsg.Content = responseBuilder.ToString();
+            MainThread.BeginInvokeOnMainThread(() => assistantMsg.Content = responseBuilder.ToString());
 
-            // Notify view to do cursor blink-out animation
-            StreamingCompleted?.Invoke(this, EventArgs.Empty);
+            // Notify view to do cursor blink-out animation via messenger
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send<MauMind.App.Messages.StreamingCompletedMessage, string>(new MauMind.App.Messages.StreamingCompletedMessage(), string.Empty);
             
             // Save assistant message
             await _chatService.SaveMessageAsync(assistantMsg);
 
-            // Generate follow-up questions in background
+            // Generate follow-up questions in background and marshal results to UI thread
             _ = Task.Run(() =>
             {
                 var followUps = _followUpService.GenerateFollowUps(userMessage, assistantMsg.Content);
-                FollowUpQuestions = followUps;
-                FollowUpQuestionsReady?.Invoke(this, followUps);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    FollowUpQuestions = followUps;
+                    CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send<MauMind.App.Messages.FollowUpQuestionsMessage, string>(new MauMind.App.Messages.FollowUpQuestionsMessage(followUps), string.Empty);
+                });
             });
 
             StatusMessage = "Ready";
@@ -262,7 +260,7 @@ public partial class ChatViewModel : ObservableObject
                 IsUser = false,
                 Timestamp = DateTime.UtcNow
             };
-            Messages.Add(errorMsg);
+            MainThread.BeginInvokeOnMainThread(() => Messages.Add(errorMsg));
             
             // Log the actual error
             _errorHandlingService.HandleError(ex, "ChatViewModel.GenerateResponse");
@@ -284,9 +282,9 @@ public partial class ChatViewModel : ObservableObject
     [RelayCommand]
     private async Task ClearChat()
     {
-        Messages.Clear();
+        MainThread.BeginInvokeOnMainThread(() => Messages.Clear());
         await _chatService.ClearHistoryAsync();
-        
+
         // Add welcome message
         var welcomeMessage = new ChatMessage
         {
@@ -294,7 +292,7 @@ public partial class ChatViewModel : ObservableObject
             IsUser = false,
             Timestamp = DateTime.UtcNow
         };
-        Messages.Add(welcomeMessage);
+        MainThread.BeginInvokeOnMainThread(() => Messages.Add(welcomeMessage));
     }
 
     // ─── Web Search ───────────────────────────────────────────────────────────
@@ -305,7 +303,7 @@ public partial class ChatViewModel : ObservableObject
         if (!_webSearchService.IsEnabled) return;
         PendingWebSearchQuery = query;
         IsWebSearchPending = true;
-        WebSearchConfirmationRequested?.Invoke(this, query);
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send<MauMind.App.Messages.WebSearchRequestedMessage, string>(new MauMind.App.Messages.WebSearchRequestedMessage(query), string.Empty);
     }
 
     /// <summary>User confirmed: proceed with web search.</summary>
@@ -346,15 +344,13 @@ public partial class ChatViewModel : ObservableObject
                 IsUser = false,
                 Timestamp = DateTime.UtcNow
             };
-            Messages.Add(assistantMsg);
+            MainThread.BeginInvokeOnMainThread(() => Messages.Add(assistantMsg));
 
-            // Append each snippet
+            // Append each snippet (update content in-place)
             foreach (var result in searchResult.Results.Take(2))
             {
-                assistantMsg.Content += $"**{result.Title}**\n{result.Snippet}\n\n";
-                var idx = Messages.Count - 1;
-                Messages.RemoveAt(idx);
-                Messages.Add(assistantMsg);
+                var snippet = $"**{result.Title}**\n{result.Snippet}\n\n";
+                MainThread.BeginInvokeOnMainThread(() => assistantMsg.Content += snippet);
                 await Task.Delay(30); // brief streaming effect
             }
 
@@ -384,6 +380,6 @@ public partial class ChatViewModel : ObservableObject
     {
         IsWebSearchPending = false;
         PendingWebSearchQuery = string.Empty;
-        WebSearchDenied?.Invoke(this, EventArgs.Empty);
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send<MauMind.App.Messages.WebSearchDeniedMessage, string>(new MauMind.App.Messages.WebSearchDeniedMessage(), string.Empty);
     }
 }

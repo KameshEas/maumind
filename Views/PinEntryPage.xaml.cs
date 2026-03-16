@@ -14,13 +14,13 @@ public partial class PinEntryPage : ContentPage
     // Callback for successful PIN entry
     public Action? OnPinVerified { get; set; }
 
-    public PinEntryPage()
+    public PinEntryPage(ISecretModeService secretModeService)
     {
         InitializeComponent();
-        
-        _secretModeService = App.GetService<ISecretModeService>();
+
+        _secretModeService = secretModeService;
         _pinFrames = new[] { Pin1, Pin2, Pin3, Pin4 };
-        
+
         // Determine mode based on whether PIN is already set
         if (_secretModeService.IsPinSet)
         {

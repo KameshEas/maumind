@@ -15,19 +15,14 @@ public partial class ChatPage : ContentPage
     private string _searchQuery = string.Empty;
     private List<ChatMessage> _allMessages = new();
     
-    public ChatPage()
+    public ChatPage(ChatViewModel viewModel, IAnimationService animationService, IVoiceService? voiceService = null)
     {
         InitializeComponent();
-        
-        _viewModel = App.GetService<ChatViewModel>();
-        _animationService = App.GetService<IAnimationService>();
+
+        _viewModel = viewModel;
+        _animationService = animationService;
+        _voiceService = voiceService;
         BindingContext = _viewModel;
-        
-        try
-        {
-            _voiceService = App.GetService<IVoiceService>();
-        }
-        catch { }
         
         Loaded += async (s, e) => 
         {
@@ -44,25 +39,34 @@ public partial class ChatPage : ContentPage
             _animationService?.AddPressAnimation(SendButton);
             _animationService?.AddPressAnimation(VoiceButton);
 
-            // Subscribe to web search events
-            _viewModel.WebSearchConfirmationRequested += OnWebSearchConfirmationRequested;
-            _viewModel.WebSearchDenied += OnWebSearchDenied;
+            // Register messenger handlers for view events
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Register<ChatPage, MauMind.App.Messages.WebSearchRequestedMessage, string>(this, string.Empty, (r, m) =>
+            {
+                MainThread.BeginInvokeOnMainThread(() => ShowWebSearchCard(m.Value));
+            });
 
-            // Subscribe to follow-up questions
-            _viewModel.FollowUpQuestionsReady += OnFollowUpQuestionsReady;
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Register<ChatPage, MauMind.App.Messages.WebSearchDeniedMessage, string>(this, string.Empty, (r, m) =>
+            {
+                MainThread.BeginInvokeOnMainThread(RemoveWebSearchCard);
+            });
 
-            // Subscribe to streaming completed (cursor blink-out)
-            _viewModel.StreamingCompleted += OnStreamingCompleted;
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Register<ChatPage, MauMind.App.Messages.FollowUpQuestionsMessage, string>(this, string.Empty, (r, m) =>
+            {
+                MainThread.BeginInvokeOnMainThread(() => ShowFollowUpChips(m.Value));
+            });
+
+            CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Register<ChatPage, MauMind.App.Messages.StreamingCompletedMessage, string>(this, string.Empty, (r, m) =>
+            {
+                MainThread.BeginInvokeOnMainThread(() => _ = BlinkOutCursorAsync());
+            });
         };
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        _viewModel.WebSearchConfirmationRequested -= OnWebSearchConfirmationRequested;
-        _viewModel.WebSearchDenied -= OnWebSearchDenied;
-        _viewModel.FollowUpQuestionsReady -= OnFollowUpQuestionsReady;
-        _viewModel.StreamingCompleted -= OnStreamingCompleted;
+        // Unregister all messenger handlers for this view to avoid leaks
+        CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.UnregisterAll(this);
     }
     
     private async void RefreshMessages()
@@ -270,7 +274,8 @@ public partial class ChatPage : ContentPage
     
     private async void OnSettingsClicked(object sender, EventArgs e)
     {
-        await Shell.Current.Navigation.PushAsync(new SettingsPage());
+        var settings = App.Services.GetRequiredService<SettingsPage>();
+        await Shell.Current.Navigation.PushAsync(settings);
     }
     
     private async Task SendMessage()
@@ -291,15 +296,7 @@ public partial class ChatPage : ContentPage
 
     private Frame? _webSearchCard;
 
-    private void OnWebSearchConfirmationRequested(object? sender, string query)
-    {
-        MainThread.BeginInvokeOnMainThread(() => ShowWebSearchCard(query));
-    }
-
-    private void OnWebSearchDenied(object? sender, EventArgs e)
-    {
-        MainThread.BeginInvokeOnMainThread(RemoveWebSearchCard);
-    }
+    // Web search handlers moved to messenger registrations
 
     private void ShowWebSearchCard(string query)
     {
@@ -408,10 +405,7 @@ public partial class ChatPage : ContentPage
 
     private StackLayout? _followUpChipsRow;
 
-    private void OnFollowUpQuestionsReady(object? sender, List<string> questions)
-    {
-        MainThread.BeginInvokeOnMainThread(() => ShowFollowUpChips(questions));
-    }
+    // Follow-up handler moved to messenger registrations
 
     private void ShowFollowUpChips(List<string> questions)
     {
@@ -523,10 +517,7 @@ public partial class ChatPage : ContentPage
 
     // ─── Streaming Cursor Blink-Out ───────────────────────────────────────────
 
-    private void OnStreamingCompleted(object? sender, EventArgs e)
-    {
-        MainThread.BeginInvokeOnMainThread(() => _ = BlinkOutCursorAsync());
-    }
+    // Streaming completed handler moved to messenger registrations
 
     private async Task BlinkOutCursorAsync()
     {

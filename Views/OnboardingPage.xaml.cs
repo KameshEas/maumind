@@ -22,11 +22,11 @@ public partial class OnboardingPage : ContentPage
     private int _currentIndex = 0;
     private bool _isAnimating = false;
 
-    public OnboardingPage()
+    public OnboardingPage(IFirstLaunchService firstLaunchService)
     {
         InitializeComponent();
 
-        _firstLaunchService = App.GetService<IFirstLaunchService>();
+        _firstLaunchService = firstLaunchService;
 
         _slides = [Slide0, Slide1, Slide2, Slide3];
         _dots   = [Dot0, Dot1, Dot2, Dot3];
