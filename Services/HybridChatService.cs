@@ -19,6 +19,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
 {
     private readonly IVectorStore _vectorStore;
     private readonly DatabaseService _databaseService;
+    private readonly IMemoryService _memoryService;
     private bool _isModelLoaded;
     
     public bool IsModelLoaded => _isModelLoaded;
@@ -29,10 +30,11 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
     private const int TopK = 8;  // Get more results for hybrid scoring
     private const int MaxAnswerLength = 500;  // Limit answer length
     
-    public HybridChatService(IVectorStore vectorStore, DatabaseService databaseService)
+    public HybridChatService(IVectorStore vectorStore, DatabaseService databaseService, IMemoryService memoryService)
     {
         _vectorStore = vectorStore;
         _databaseService = databaseService;
+        _memoryService = memoryService;
     }
 
     public void Dispose()
@@ -100,12 +102,32 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
         
         // Try semantic search first
         var semanticResults = await GetSemanticResultsAsync(userMessage);
-        
+
         // Try keyword search
         var keywordResults = GetKeywordResults(userMessage, allDocuments);
-        
-        // Combine and rank results
-        var hybridResults = CombineResults(semanticResults, keywordResults);
+
+        // Try memory retrieval (persistent contextual memory)
+        var memoryResults = new List<HybridResult>();
+        try
+        {
+            var mems = await _memoryService.RetrieveAsync(userMessage, TopK);
+            // Convert to HybridResult and boost memory scores slightly
+            memoryResults = mems.Select(m => new HybridResult
+            {
+                Text = m.Memory.Content,
+                Score = m.Score * 1.15f,
+                Source = ResultSource.Memory,
+                DocumentId = 0,
+                DocumentTitle = "Memory"
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Memory retrieval error: {ex.Message}");
+        }
+
+        // Combine and rank results (memories get priority)
+        var hybridResults = CombineResults(memoryResults, semanticResults, keywordResults);
         
         if (hybridResults.Count == 0)
         {
@@ -215,13 +237,25 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
     /// Combine semantic and keyword results, removing duplicates
     /// </summary>
     private List<HybridResult> CombineResults(
+        List<HybridResult> memoryResults,
         List<HybridResult> semanticResults, 
         List<HybridResult> keywordResults)
     {
         var combined = new List<HybridResult>();
         var seenTexts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        
-        // First add semantic results (higher priority)
+
+        // Add memory results first (highest priority)
+        foreach (var result in memoryResults.OrderByDescending(r => r.Score))
+        {
+            var normalized = NormalizeText(result.Text);
+            if (!seenTexts.Contains(normalized) && result.Score > 0.05f)
+            {
+                seenTexts.Add(normalized);
+                combined.Add(result);
+            }
+        }
+
+        // Then add semantic results
         foreach (var result in semanticResults.OrderByDescending(r => r.Score))
         {
             var normalized = NormalizeText(result.Text);
@@ -231,7 +265,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
                 combined.Add(result);
             }
         }
-        
+
         // Then add keyword results that aren't duplicates
         foreach (var result in keywordResults.OrderByDescending(r => r.Score))
         {
@@ -242,7 +276,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
                 combined.Add(result);
             }
         }
-        
+
         return combined.Take(10).ToList();
     }
     
@@ -526,7 +560,8 @@ public enum ResultSource
 {
     Semantic,
     Keyword,
-    Hybrid
+    Hybrid,
+    Memory
 }
 
 public class HybridResult

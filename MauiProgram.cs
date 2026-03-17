@@ -27,6 +27,7 @@ public static class MauiProgram
 
 		// Services
 		builder.Services.AddSingleton<IEmbeddingService, EmbeddingService>();
+		builder.Services.AddSingleton<IMemoryService, MemoryService>();
 		builder.Services.AddSingleton<IAccessibilityService, AccessibilityService>();
 		builder.Services.AddSingleton<IVectorStore, VectorStore>();
 		builder.Services.AddSingleton<IDocumentService, DocumentService>();

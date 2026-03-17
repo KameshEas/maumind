@@ -22,17 +22,32 @@
                        HorizontalOptions="Center" VerticalOptions="Center"/>
             </Frame>
             
-            <!-- Title & Status -->
-            <StackLayout Grid.Column="1" VerticalOptions="Center" Margin="14,0,0,0">
-                <Label Text="MauMind" Style="{StaticResource CardTitle}"
-                       TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
-                <StackLayout Orientation="Horizontal" Spacing="6">
-                    <Frame WidthRequest="6" HeightRequest="6" CornerRadius="3" 
-                           Background="{StaticResource Success}" Padding="0" VerticalOptions="Center"/>
-                    <Label Text="Ready" Style="{StaticResource CaptionText}"
-                           TextColor="{AppThemeBinding Light={StaticResource LightTextSecondary}, Dark={StaticResource DarkTextSecondary}}"/>
-                </StackLayout>
-            </StackLayout>
+                <!-- Conversation picker & Status -->
+                <Grid Grid.Column="1" VerticalOptions="Center" Margin="14,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Picker Grid.Column="0" Title="Select conversation"
+                    ItemsSource="{Binding Conversations}"
+                    ItemDisplayBinding="{Binding Title}"
+                    SelectedItem="{Binding SelectedConversation, Mode=TwoWay}"
+                    HorizontalOptions="FillAndExpand" />
+
+                <Button Grid.Column="1" Text="+" WidthRequest="36" HeightRequest="36" Margin="6,0"
+                    Command="{Binding CreateConversationCommand}" Style="{StaticResource IconButton}" />
+
+                <Button Grid.Column="2" Text="✎" WidthRequest="36" HeightRequest="36" Margin="6,0"
+                    CommandParameter="{Binding SelectedConversation}"
+                    Command="{Binding RenameConversationCommand}" Style="{StaticResource IconButton}" />
+
+                <Button Grid.Column="3" Text="🗑" WidthRequest="36" HeightRequest="36" Margin="6,0"
+                    CommandParameter="{Binding SelectedConversation}"
+                    Command="{Binding DeleteConversationCommand}" Style="{StaticResource IconButton}" />
+                </Grid>
             
             <!-- Settings Icon - Clean -->
             <Button Grid.Column="2" Text="&#x2699;" FontSize="20" Style="{StaticResource IconButton}" 

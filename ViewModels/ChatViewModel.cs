@@ -2,12 +2,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MauMind.App.Models;
 using MauMind.App.Services;
+using MauMind.App.Data;
 using System.Collections.ObjectModel;
 
 namespace MauMind.App.ViewModels;
 
 public partial class ChatViewModel : ObservableObject
 {
+    private readonly DatabaseService _databaseService;
     private readonly IChatService _chatService;
     private readonly IVectorStore _vectorStore;
     private readonly IErrorHandlingService _errorHandlingService;
@@ -51,10 +53,18 @@ public partial class ChatViewModel : ObservableObject
     [ObservableProperty]
     private string _errorMessage = string.Empty;
     
+    [ObservableProperty]
+    private ObservableCollection<Conversation> _conversations = new();
+
+    [ObservableProperty]
+    private Conversation? _selectedConversation;
+
     public ChatViewModel(IChatService chatService, IVectorStore vectorStore,
         IErrorHandlingService errorHandlingService, IWebSearchService webSearchService,
-        IFollowUpService followUpService, CommunityToolkit.Mvvm.Messaging.IMessenger messenger)
+        IFollowUpService followUpService, CommunityToolkit.Mvvm.Messaging.IMessenger messenger,
+        DatabaseService databaseService)
     {
+        _databaseService = databaseService;
         _chatService = chatService;
         _vectorStore = vectorStore;
         _errorHandlingService = errorHandlingService;
@@ -78,11 +88,30 @@ public partial class ChatViewModel : ObservableObject
             IsModelsLoaded = true;
             StatusMessage = "Ready";
             
-            // Load chat history (marshal to main thread)
-            var history = await _chatService.GetChatHistoryAsync();
-            foreach (var message in history)
+            // Load conversations
+            var convs = await _databaseService.GetAllConversationsAsync();
+            if (convs.Count == 0)
             {
-                MainThread.BeginInvokeOnMainThread(() => Messages.Add(message));
+                var defaultConv = new Conversation { Title = "General" };
+                var id = await _databaseService.InsertConversationAsync(defaultConv);
+                defaultConv.Id = id;
+                convs.Add(defaultConv);
+            }
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Conversations = new ObservableCollection<Conversation>(convs);
+                SelectedConversation = Conversations.FirstOrDefault();
+            });
+
+            // Load chat history for selected conversation
+            if (SelectedConversation != null)
+            {
+                var history = await _databaseService.GetChatMessagesAsync(SelectedConversation.Id, 200);
+                foreach (var message in history)
+                {
+                    MainThread.BeginInvokeOnMainThread(() => Messages.Add(message));
+                }
             }
             
             // Add welcome message if no history
@@ -95,7 +124,11 @@ public partial class ChatViewModel : ObservableObject
                     Timestamp = DateTime.UtcNow
                 };
                 MainThread.BeginInvokeOnMainThread(() => Messages.Add(welcomeMessage));
-                await _chatService.SaveMessageAsync(welcomeMessage);
+                if (SelectedConversation != null)
+                {
+                    welcomeMessage.ConversationId = SelectedConversation.Id;
+                    await _databaseService.InsertChatMessageAsync(welcomeMessage);
+                }
             }
         }
         catch (Exception ex)
@@ -120,8 +153,9 @@ public partial class ChatViewModel : ObservableObject
             IsUser = true,
             Timestamp = DateTime.UtcNow
         };
+        if (SelectedConversation != null) userMsg.ConversationId = SelectedConversation.Id;
         MainThread.BeginInvokeOnMainThread(() => Messages.Add(userMsg));
-        await _chatService.SaveMessageAsync(userMsg);
+        await _databaseService.InsertChatMessageAsync(userMsg);
         
         // Process response
         await GenerateResponse(userMessage);
@@ -225,8 +259,9 @@ public partial class ChatViewModel : ObservableObject
             // Notify view to do cursor blink-out animation via messenger
             CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger.Default.Send<MauMind.App.Messages.StreamingCompletedMessage, string>(new MauMind.App.Messages.StreamingCompletedMessage(), string.Empty);
             
-            // Save assistant message
-            await _chatService.SaveMessageAsync(assistantMsg);
+            // Save assistant message (scoped to conversation)
+            if (SelectedConversation != null) assistantMsg.ConversationId = SelectedConversation.Id;
+            await _databaseService.InsertChatMessageAsync(assistantMsg);
 
             // Generate follow-up questions in background and marshal results to UI thread
             _ = Task.Run(() =>
@@ -283,7 +318,14 @@ public partial class ChatViewModel : ObservableObject
     private async Task ClearChat()
     {
         MainThread.BeginInvokeOnMainThread(() => Messages.Clear());
-        await _chatService.ClearHistoryAsync();
+        if (SelectedConversation != null)
+        {
+            await _databaseService.DeleteChatMessagesByConversationIdAsync(SelectedConversation.Id);
+        }
+        else
+        {
+            await _chatService.ClearHistoryAsync();
+        }
 
         // Add welcome message
         var welcomeMessage = new ChatMessage
@@ -293,6 +335,52 @@ public partial class ChatViewModel : ObservableObject
             Timestamp = DateTime.UtcNow
         };
         MainThread.BeginInvokeOnMainThread(() => Messages.Add(welcomeMessage));
+    }
+
+    // Conversation Commands
+    partial void OnSelectedConversationChanged(Conversation? value)
+    {
+        // Load messages for the selected conversation asynchronously
+        _ = Task.Run(async () =>
+        {
+            if (value == null) return;
+            var history = await _databaseService.GetChatMessagesAsync(value.Id, 200);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Messages.Clear();
+                foreach (var m in history) Messages.Add(m);
+            });
+        });
+    }
+
+    [RelayCommand]
+    private async Task CreateConversation()
+    {
+        var conv = new Conversation { Title = "New Conversation", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow };
+        var id = await _databaseService.InsertConversationAsync(conv);
+        conv.Id = id;
+        MainThread.BeginInvokeOnMainThread(() => Conversations.Insert(0, conv));
+        SelectedConversation = conv;
+    }
+
+    [RelayCommand]
+    private async Task RenameConversation(Conversation conversation)
+    {
+        if (conversation == null) return;
+        conversation.UpdatedAt = DateTime.UtcNow;
+        await _databaseService.UpdateConversationAsync(conversation);
+    }
+
+    [RelayCommand]
+    private async Task DeleteConversation(Conversation conversation)
+    {
+        if (conversation == null) return;
+        await _databaseService.DeleteConversationAsync(conversation.Id);
+        MainThread.BeginInvokeOnMainThread(() => Conversations.Remove(conversation));
+        if (SelectedConversation == conversation)
+        {
+            SelectedConversation = Conversations.FirstOrDefault();
+        }
     }
 
     // ─── Web Search ───────────────────────────────────────────────────────────
