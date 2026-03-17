@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using MauMind.App.Models;
 using MauMind.App.Services;
 using MauMind.App.Data;
+using MauMind.App.Services;
 using System.Collections.ObjectModel;
 
 namespace MauMind.App.ViewModels;
@@ -15,6 +16,7 @@ public partial class ChatViewModel : ObservableObject
     private readonly IErrorHandlingService _errorHandlingService;
     private readonly IWebSearchService _webSearchService;
     private readonly IFollowUpService _followUpService;
+    private readonly IFirstLaunchService _firstLaunchService;
     private CancellationTokenSource? _cts;
     private readonly CommunityToolkit.Mvvm.Messaging.IMessenger _messenger;
 
@@ -62,9 +64,10 @@ public partial class ChatViewModel : ObservableObject
     public ChatViewModel(IChatService chatService, IVectorStore vectorStore,
         IErrorHandlingService errorHandlingService, IWebSearchService webSearchService,
         IFollowUpService followUpService, CommunityToolkit.Mvvm.Messaging.IMessenger messenger,
-        DatabaseService databaseService)
+        DatabaseService databaseService, IFirstLaunchService firstLaunchService)
     {
         _databaseService = databaseService;
+        _firstLaunchService = firstLaunchService;
         _chatService = chatService;
         _vectorStore = vectorStore;
         _errorHandlingService = errorHandlingService;
@@ -96,12 +99,20 @@ public partial class ChatViewModel : ObservableObject
                 var id = await _databaseService.InsertConversationAsync(defaultConv);
                 defaultConv.Id = id;
                 convs.Add(defaultConv);
+
+                // Persist selection on first creation
+                _firstLaunchService.SelectedConversationId = id;
             }
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 Conversations = new ObservableCollection<Conversation>(convs);
-                SelectedConversation = Conversations.FirstOrDefault();
+                // Try to restore previously selected conversation
+                Conversation? toSelect = null;
+                if (_firstLaunchService.SelectedConversationId.HasValue)
+                    toSelect = Conversations.FirstOrDefault(c => c.Id == _firstLaunchService.SelectedConversationId.Value);
+
+                SelectedConversation = toSelect ?? Conversations.FirstOrDefault();
             });
 
             // Load chat history for selected conversation
@@ -351,6 +362,12 @@ public partial class ChatViewModel : ObservableObject
                 foreach (var m in history) Messages.Add(m);
             });
         });
+        // Persist selection
+        try
+        {
+            _firstLaunchService.SelectedConversationId = value?.Id;
+        }
+        catch { }
     }
 
     [RelayCommand]

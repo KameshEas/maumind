@@ -45,6 +45,24 @@ public partial class NoteEditorViewModel : ObservableObject
     [ObservableProperty]
     private ToneType _selectedTone = ToneType.Professional;
 
+    [ObservableProperty]
+    private List<string> _styleOptions = new()
+    {
+        "Clearer",
+        "More persuasive",
+        "Simpler vocabulary",
+        "Use active voice"
+    };
+
+    [ObservableProperty]
+    private string? _selectedStyle;
+
+    [ObservableProperty]
+    private List<LengthType> _lengthOptions = new() { LengthType.Short, LengthType.Medium, LengthType.Long };
+
+    [ObservableProperty]
+    private LengthType _selectedLength = LengthType.Medium;
+
     public event EventHandler? SaveCompleted;
     public event EventHandler? CancelRequested;
 
@@ -137,7 +155,7 @@ public partial class NoteEditorViewModel : ObservableObject
 
         try
         {
-            var rewritten = await _writingAssistant.RewriteForToneAsync(Content, SelectedTone);
+            var rewritten = await _writingAssistant.RewriteWithOptionsAsync(Content, SelectedTone, SelectedStyle, SelectedLength);
             Content = rewritten;
             StatusMessage = "Rewritten! Review changes.";
         }

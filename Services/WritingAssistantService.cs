@@ -181,6 +181,53 @@ Return ONLY the rewritten text with no explanations.";
         }
     }
 
+    public async Task<string> RewriteWithOptionsAsync(string text, ToneType tone, string? styleHint = null, LengthType length = LengthType.Medium)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return text;
+
+        var toneDescription = tone switch
+        {
+            ToneType.Professional => "professional and business-appropriate",
+            ToneType.Casual => "casual and conversational",
+            ToneType.Formal => "formal and authoritative",
+            ToneType.Academic => "academic and scholarly",
+            ToneType.Friendly => "friendly and warm",
+            _ => "professional"
+        };
+
+        var lengthInstruction = length switch
+        {
+            LengthType.Short => "Keep the rewrite concise (short).",
+            LengthType.Medium => "Keep the rewrite a balanced length.",
+            LengthType.Long => "Expand where helpful to be more thorough (long).",
+            _ => "Keep the rewrite a balanced length."
+        };
+
+        var stylePart = string.IsNullOrWhiteSpace(styleHint) ? string.Empty : $"Focus on style: {styleHint}. ";
+
+        var prompt = $@"Rewrite the following text to be more {toneDescription}. {stylePart}{lengthInstruction} Preserve the core meaning but adjust tone, word choice, and structure. Return ONLY the rewritten text with no extra commentary.
+
+    Original text:
+    ""{text}""
+    ";
+
+        try
+        {
+            var responseBuilder = new System.Text.StringBuilder();
+            await foreach (var token in _chatService.GetStreamingResponseAsync(prompt))
+            {
+                responseBuilder.Append(token);
+            }
+
+            return responseBuilder.ToString().Trim();
+        }
+        catch
+        {
+            return text;
+        }
+    }
+
     private SuggestionType ParseSuggestionType(string? type)
     {
         return type?.ToLowerInvariant() switch

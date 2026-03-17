@@ -6,6 +6,7 @@ public interface IFirstLaunchService
 {
     bool IsFirstLaunch { get; }
     bool IsOnboardingComplete { get; set; }
+    int? SelectedConversationId { get; set; }
     void CompleteOnboarding();
     void ShowFeatureHint(string featureKey);
     bool ShouldShowFeatureHint(string featureKey);
@@ -25,6 +26,19 @@ public class FirstLaunchService : IFirstLaunchService
             if (_settings != null)
             {
                 _settings.OnboardingComplete = value;
+                SaveSettings();
+            }
+        }
+    }
+
+    public int? SelectedConversationId
+    {
+        get => _settings?.SelectedConversationId;
+        set
+        {
+            if (_settings != null)
+            {
+                _settings.SelectedConversationId = value;
                 SaveSettings();
             }
         }
@@ -108,4 +122,5 @@ public class OnboardingSettings
     public bool IsFirstLaunch { get; set; } = true;
     public bool OnboardingComplete { get; set; } = false;
     public List<string>? ShownHints { get; set; }
+    public int? SelectedConversationId { get; set; }
 }

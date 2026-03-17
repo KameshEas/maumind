@@ -15,6 +15,11 @@ public interface IWritingAssistantService
     Task<string> RewriteForToneAsync(string text, ToneType tone);
 
     /// <summary>
+    /// Rewrite text with advanced options: tone, optional style hints, and length control.
+    /// </summary>
+    Task<string> RewriteWithOptionsAsync(string text, ToneType tone, string? styleHint = null, LengthType length = LengthType.Medium);
+
+    /// <summary>
     /// Improve clarity of the text.
     /// </summary>
     Task<string> ImproveClarityAsync(string text);

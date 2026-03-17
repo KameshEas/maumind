@@ -28,3 +28,10 @@ public enum ToneType
     Academic,
     Friendly
 }
+
+public enum LengthType
+{
+    Short,
+    Medium,
+    Long
+}
