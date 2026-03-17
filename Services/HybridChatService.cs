@@ -116,9 +116,21 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
             {
                 Text = m.Memory.Content,
                 Score = m.Score * 1.15f,
+                Confidence = m.Score * 1.15f,
                 Source = ResultSource.Memory,
                 DocumentId = 0,
-                DocumentTitle = "Memory"
+                DocumentTitle = "Memory",
+                Provenance = new List<ProvenanceEntry>
+                {
+                    new ProvenanceEntry
+                    {
+                        DocumentId = 0,
+                        DocumentTitle = "Memory",
+                        Excerpt = m.Memory.Content,
+                        Score = m.Score,
+                        Source = ResultSource.Memory
+                    }
+                }
             }).ToList();
         }
         catch (Exception ex)
@@ -179,12 +191,27 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
             {
                 if (score >= SemanticThreshold)
                 {
+                    var doc = await _databaseService.GetDocumentByIdAsync(entry.DocumentId);
+                    var title = doc?.Title ?? string.Empty;
                     results.Add(new HybridResult
                     {
                         Text = entry.ChunkText,
                         Score = score,
+                        Confidence = score,
                         Source = ResultSource.Semantic,
-                        DocumentId = entry.DocumentId
+                        DocumentId = entry.DocumentId,
+                        DocumentTitle = title,
+                        Provenance = new List<ProvenanceEntry>
+                        {
+                            new ProvenanceEntry
+                            {
+                                DocumentId = entry.DocumentId,
+                                DocumentTitle = title,
+                                Excerpt = entry.ChunkText,
+                                Score = score,
+                                Source = ResultSource.Semantic
+                            }
+                        }
                     });
                 }
             }
@@ -217,13 +244,26 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
                 
                 if (keywordScore > 0)
                 {
+                    var ks = (float)(keywordScore * 0.8);
                     results.Add(new HybridResult
                     {
                         Text = sentence.Trim(),
-                        Score = (float)(keywordScore * 0.8), // Weight keyword results slightly lower
+                        Score = ks, // Weight keyword results slightly lower
+                        Confidence = ks,
                         Source = ResultSource.Keyword,
                         DocumentId = doc.Id,
-                        DocumentTitle = doc.Title
+                        DocumentTitle = doc.Title,
+                        Provenance = new List<ProvenanceEntry>
+                        {
+                            new ProvenanceEntry
+                            {
+                                DocumentId = doc.Id,
+                                DocumentTitle = doc.Title,
+                                Excerpt = sentence.Trim(),
+                                Score = ks,
+                                Source = ResultSource.Keyword
+                            }
+                        }
                     });
                 }
             }
@@ -298,7 +338,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
         var topResults = results.Take(3).ToList();
         
         // Generate answer based on question type
-        return questionType switch
+        string answer = questionType switch
         {
             QuestionType.Summary => GenerateSummaryAnswer(query, topResults),
             QuestionType.List => GenerateListAnswer(query, topResults),
@@ -310,6 +350,47 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
             QuestionType.Comparison => GenerateComparisonAnswer(query, topResults),
             _ => GenerateInformationalAnswer(query, topResults)
         };
+
+        // Append concise provenance and confidence information
+        try
+        {
+            var provenanceLines = new List<string>();
+            int idx = 1;
+            foreach (var r in topResults)
+            {
+                if (r.Provenance != null && r.Provenance.Count > 0)
+                {
+                    foreach (var p in r.Provenance)
+                    {
+                        var conf = Math.Round(p.Score, 3);
+                        var title = string.IsNullOrWhiteSpace(p.DocumentTitle) ? "(untitled)" : p.DocumentTitle;
+                        var excerpt = p.Excerpt.Length > 160 ? p.Excerpt.Substring(0, 160) + "..." : p.Excerpt;
+                        provenanceLines.Add($"{idx}. {title} — source: {p.Source} — confidence: {conf}\nExcerpt: {excerpt}");
+                        idx++;
+                    }
+                }
+                else
+                {
+                    // Fallback to result-level info
+                    var conf = Math.Round(r.Confidence, 3);
+                    var title = string.IsNullOrWhiteSpace(r.DocumentTitle) ? "(untitled)" : r.DocumentTitle;
+                    var excerpt = r.Text.Length > 160 ? r.Text.Substring(0, 160) + "..." : r.Text;
+                    provenanceLines.Add($"{idx}. {title} — source: {r.Source} — confidence: {conf}\nExcerpt: {excerpt}");
+                    idx++;
+                }
+            }
+
+            if (provenanceLines.Count > 0)
+            {
+                answer += "\n\nSources:\n" + string.Join("\n", provenanceLines);
+            }
+        }
+        catch
+        {
+            // don't let provenance formatting break the answer
+        }
+
+        return answer;
     }
     
     private QuestionType ClassifyQuestion(string question)
@@ -571,4 +652,15 @@ public class HybridResult
     public ResultSource Source { get; set; }
     public int DocumentId { get; set; }
     public string DocumentTitle { get; set; } = "";
+    public float Confidence { get; set; }
+    public List<ProvenanceEntry> Provenance { get; set; } = new();
+}
+
+public class ProvenanceEntry
+{
+    public int DocumentId { get; set; }
+    public string DocumentTitle { get; set; } = string.Empty;
+    public string Excerpt { get; set; } = string.Empty;
+    public float Score { get; set; }
+    public ResultSource Source { get; set; }
 }
