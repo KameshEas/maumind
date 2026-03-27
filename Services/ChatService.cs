@@ -16,6 +16,7 @@ public class ChatService : IChatService, IAsyncDisposable, IDisposable
     public bool IsModelLoaded => _isModelLoaded;
 
     public event EventHandler<string>? NoLocalDataFound;
+    public event EventHandler<List<ProvenanceEntry>>? ProvenanceAvailable;
 
     public ChatService(IVectorStore vectorStore, DatabaseService databaseService)
     {

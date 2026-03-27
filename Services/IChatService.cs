@@ -19,4 +19,5 @@ public interface IChatService
     /// Subscribers can trigger a web search fallback.
     /// </summary>
     event EventHandler<string>? NoLocalDataFound;
+    event EventHandler<List<MauMind.App.Models.ProvenanceEntry>>? ProvenanceAvailable;
 }

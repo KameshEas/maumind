@@ -24,6 +24,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
     
     public bool IsModelLoaded => _isModelLoaded;
     public event EventHandler<string>? NoLocalDataFound;
+        public event EventHandler<List<ProvenanceEntry>>? ProvenanceAvailable;
     
     // Configuration
     private const float SemanticThreshold = 0.2f;  // Lowered for more semantic matches
@@ -128,7 +129,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
                         DocumentTitle = "Memory",
                         Excerpt = m.Memory.Content,
                         Score = m.Score,
-                        Source = ResultSource.Memory
+                        Source = ResultSource.Memory.ToString()
                     }
                 }
             }).ToList();
@@ -209,7 +210,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
                                 DocumentTitle = title,
                                 Excerpt = entry.ChunkText,
                                 Score = score,
-                                Source = ResultSource.Semantic
+                                Source = ResultSource.Semantic.ToString()
                             }
                         }
                     });
@@ -261,7 +262,7 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
                                 DocumentTitle = doc.Title,
                                 Excerpt = sentence.Trim(),
                                 Score = ks,
-                                Source = ResultSource.Keyword
+                                Source = ResultSource.Keyword.ToString()
                             }
                         }
                     });
@@ -351,44 +352,32 @@ public class HybridChatService : IChatService, IDisposable, IAsyncDisposable
             _ => GenerateInformationalAnswer(query, topResults)
         };
 
-        // Append concise provenance and confidence information
+        // Emit provenance separately (UI will render sources) and return the plain answer
         try
         {
-            var provenanceLines = new List<string>();
-            int idx = 1;
+            var combined = new List<ProvenanceEntry>();
             foreach (var r in topResults)
             {
                 if (r.Provenance != null && r.Provenance.Count > 0)
                 {
-                    foreach (var p in r.Provenance)
-                    {
-                        var conf = Math.Round(p.Score, 3);
-                        var title = string.IsNullOrWhiteSpace(p.DocumentTitle) ? "(untitled)" : p.DocumentTitle;
-                        var excerpt = p.Excerpt.Length > 160 ? p.Excerpt.Substring(0, 160) + "..." : p.Excerpt;
-                        provenanceLines.Add($"{idx}. {title} — source: {p.Source} — confidence: {conf}\nExcerpt: {excerpt}");
-                        idx++;
-                    }
+                    combined.AddRange(r.Provenance);
                 }
                 else
                 {
-                    // Fallback to result-level info
-                    var conf = Math.Round(r.Confidence, 3);
-                    var title = string.IsNullOrWhiteSpace(r.DocumentTitle) ? "(untitled)" : r.DocumentTitle;
-                    var excerpt = r.Text.Length > 160 ? r.Text.Substring(0, 160) + "..." : r.Text;
-                    provenanceLines.Add($"{idx}. {title} — source: {r.Source} — confidence: {conf}\nExcerpt: {excerpt}");
-                    idx++;
+                    combined.Add(new ProvenanceEntry
+                    {
+                        DocumentId = r.DocumentId,
+                        DocumentTitle = r.DocumentTitle,
+                        Excerpt = r.Text.Length > 300 ? r.Text.Substring(0, 300) + "..." : r.Text,
+                        Score = r.Confidence,
+                        Source = r.Source.ToString()
+                    });
                 }
             }
 
-            if (provenanceLines.Count > 0)
-            {
-                answer += "\n\nSources:\n" + string.Join("\n", provenanceLines);
-            }
+            ProvenanceAvailable?.Invoke(this, combined);
         }
-        catch
-        {
-            // don't let provenance formatting break the answer
-        }
+        catch { }
 
         return answer;
     }
@@ -654,13 +643,4 @@ public class HybridResult
     public string DocumentTitle { get; set; } = "";
     public float Confidence { get; set; }
     public List<ProvenanceEntry> Provenance { get; set; } = new();
-}
-
-public class ProvenanceEntry
-{
-    public int DocumentId { get; set; }
-    public string DocumentTitle { get; set; } = string.Empty;
-    public string Excerpt { get; set; } = string.Empty;
-    public float Score { get; set; }
-    public ResultSource Source { get; set; }
 }

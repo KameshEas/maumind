@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using MauMind.App.Data;
+using MauMind.App.Models;
 using MauMind.App.Services;
 using MauMind.App.ViewModels;
 using MauMind.App.Views;
@@ -46,6 +47,19 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IErrorHandlingService, ErrorHandlingService>();
 		builder.Services.AddSingleton<IFolderService, FolderService>();
 		builder.Services.AddSingleton<IWritingAssistantService, WritingAssistantService>();
+
+		// ── Auth + Billing ─────────────────────────────────────────────────────
+		// Load backend keys from app-data JSON (empty keys → offline/local mode).
+		var backendConfig = BackendConfig.Load();
+		builder.Services.AddSingleton(backendConfig);
+
+		// Dedicated HttpClient instances so headers never bleed between services.
+		builder.Services.AddSingleton<IFirebaseAuthClient>(_ =>
+			new FirebaseAuthClient(new HttpClient(), backendConfig.FirebaseWebApiKey));
+
+		// RemoteAuthService uses Firebase when configured,
+		// otherwise falls back to local-only auth automatically.
+		builder.Services.AddSingleton<IAuthService, RemoteAuthService>();
 
 		// ViewModels - use per-page / transient lifetimes to avoid singleton stateful VMs
 		builder.Services.AddTransient<NoteEditorViewModel>();

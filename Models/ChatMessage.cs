@@ -18,4 +18,5 @@ public class ChatMessage : ObservableObject
 
     public bool IsUser { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public List<ProvenanceEntry> Provenance { get; set; } = new();
 }

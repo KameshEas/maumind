@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using MauMind.App.Models;
 using MauMind.App.Services;
 using MauMind.App.Data;
-using MauMind.App.Services;
 using System.Collections.ObjectModel;
 
 namespace MauMind.App.ViewModels;
@@ -210,6 +209,19 @@ public partial class ChatViewModel : ObservableObject
                 Timestamp = DateTime.UtcNow
             };
             MainThread.BeginInvokeOnMainThread(() => Messages.Add(assistantMsg));
+            // Subscribe to provenance events so UI can show sources separately
+            EventHandler<List<MauMind.App.Models.ProvenanceEntry>>? provHandler = (s, list) =>
+            {
+                try
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        assistantMsg.Provenance = list;
+                    });
+                }
+                catch { }
+            };
+            _chatService.ProvenanceAvailable += provHandler;
             
             // Stream response with batched UI updates (80ms) and cursor
             var responseBuilder  = new System.Text.StringBuilder();
@@ -273,6 +285,13 @@ public partial class ChatViewModel : ObservableObject
             // Save assistant message (scoped to conversation)
             if (SelectedConversation != null) assistantMsg.ConversationId = SelectedConversation.Id;
             await _databaseService.InsertChatMessageAsync(assistantMsg);
+
+            // Unsubscribe from provenance events
+            try
+            {
+                _chatService.ProvenanceAvailable -= provHandler;
+            }
+            catch { }
 
             // Generate follow-up questions in background and marshal results to UI thread
             _ = Task.Run(() =>

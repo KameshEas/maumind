@@ -13,6 +13,7 @@ public partial class SettingsViewModel : ObservableObject
     private readonly IDataService _dataService;
     private readonly IAccessibilityService _accessibilityService;
     private readonly IWebSearchService _webSearchService;
+    private readonly IAuthService _authService;
     
     [ObservableProperty]
     private bool _hardwareAccelerationEnabled = true;
@@ -66,13 +67,43 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private bool _webSearchEnabled = true;
 
-    public SettingsViewModel(IEmbeddingService embeddingService, IChatService chatService, IDataService dataService, IAccessibilityService accessibilityService, IWebSearchService webSearchService)
+    [ObservableProperty]
+    private bool _isAuthenticated;
+
+    [ObservableProperty]
+    private string _currentUserEmail = "Not signed in";
+
+    [ObservableProperty]
+    private string _accountStatus = "Guest mode";
+
+    [ObservableProperty]
+    private string _loginEmail = string.Empty;
+
+    [ObservableProperty]
+    private string _loginPassword = string.Empty;
+
+    // ── Sign-up form ───────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    private bool _isSignUpMode;
+
+    [ObservableProperty]
+    private string _registerPassword = string.Empty;
+
+    [ObservableProperty]
+    private string _registerConfirmPassword = string.Empty;
+
+    [ObservableProperty]
+    private string _authModeLabel = "Don't have an account? Sign up";
+
+    public SettingsViewModel(IEmbeddingService embeddingService, IChatService chatService, IDataService dataService, IAccessibilityService accessibilityService, IWebSearchService webSearchService, IAuthService authService)
     {
         _embeddingService = embeddingService;
         _chatService = chatService;
         _dataService = dataService;
         _accessibilityService = accessibilityService;
         _webSearchService = webSearchService;
+        _authService = authService;
 
         // Set models directory
         ModelsDirectory = Path.Combine(
@@ -86,7 +117,10 @@ public partial class SettingsViewModel : ObservableObject
         LoadAccessibilitySettings();
 
         // Load web search preference
-        WebSearchEnabled = _webSearchService.IsEnabled;
+        _webSearchEnabled = _webSearchService.IsEnabled;
+
+        RefreshAuthState();
+        _authService.AuthStateChanged += OnAuthStateChanged;
     }
     
     private void LoadAccessibilitySettings()
@@ -129,6 +163,11 @@ public partial class SettingsViewModel : ObservableObject
     
     private void ApplyTheme()
     {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
         Application.Current.UserAppTheme = IsDarkMode 
             ? AppTheme.Dark 
             : AppTheme.Light;
@@ -172,8 +211,102 @@ public partial class SettingsViewModel : ObservableObject
     
     public void Initialize()
     {
+        RefreshAuthState();
         UpdateStatus();
         UpdateMemoryUsage();
+    }
+
+    private void OnAuthStateChanged(object? sender, AuthState state)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            RefreshAuthState();
+        });
+    }
+
+    private void RefreshAuthState()
+    {
+        var state = _authService.CurrentState;
+
+        IsAuthenticated = state.IsAuthenticated;
+        CurrentUserEmail = state.IsAuthenticated ? state.Email ?? "Unknown" : "Not signed in";
+
+        if (!state.IsAuthenticated)
+        {
+            AccountStatus = "Guest mode";
+            return;
+        }
+
+        AccountStatus = "Signed in";
+    }
+
+    [RelayCommand]
+    private void ToggleAuthMode()
+    {
+        IsSignUpMode = !IsSignUpMode;
+        AuthModeLabel = IsSignUpMode
+            ? "Already have an account? Log in"
+            : "Don't have an account? Sign up";
+        StatusMessage = string.Empty;
+    }
+
+    [RelayCommand]
+    private async Task Login()
+    {
+        try
+        {
+            var success = await _authService.LoginAsync(LoginEmail, LoginPassword);
+            if (!success)
+            {
+                StatusMessage = "Login failed: check your email and password (min 6 chars).";
+                return;
+            }
+
+            LoginPassword = string.Empty;
+            RefreshAuthState();
+            StatusMessage = "Logged in successfully";
+        }
+        catch (FirebaseAuthException ex)
+        {
+            StatusMessage = ex.Message;
+        }
+        catch (Exception)
+        {
+            StatusMessage = "Login failed: unable to connect. Please check your connection.";
+        }
+    }
+
+    [RelayCommand]
+    private async Task SignUp()
+    {
+        if (RegisterPassword != RegisterConfirmPassword)
+        {
+            StatusMessage = "Passwords do not match.";
+            return;
+        }
+
+        var (success, error) = await _authService.SignUpAsync(LoginEmail, RegisterPassword);
+        if (!success)
+        {
+            StatusMessage = error ?? "Sign-up failed.";
+            return;
+        }
+
+        RegisterPassword = string.Empty;
+        RegisterConfirmPassword = string.Empty;
+        IsSignUpMode = false;
+        AuthModeLabel = "Don't have an account? Sign up";
+        RefreshAuthState();
+        StatusMessage = "Account created and signed in!";
+    }
+
+    [RelayCommand]
+    private async Task Logout()
+    {
+        await _authService.LogoutAsync();
+        RefreshAuthState();
+
+        StatusMessage = "Logged out.";
     }
     
     private void UpdateStatus()

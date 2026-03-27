@@ -23,6 +23,7 @@ public class SmartChatService : IChatService, IDisposable
         _vectorStore = vectorStore;
         _databaseService = databaseService;
     }
+    public event EventHandler<List<ProvenanceEntry>>? ProvenanceAvailable;
     
     public async Task LoadModelAsync(IProgress<int>? progress = null)
     {

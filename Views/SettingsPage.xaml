@@ -18,6 +18,63 @@
                        HorizontalOptions="Start" Margin="0,0,0,0"/>
             </Grid>
 
+            <!-- Account and Subscription -->
+            <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
+                <StackLayout Spacing="0">
+                    <Label Text="Account" Style="{StaticResource SectionHeader}" Margin="0,0,0,16"/>
+
+                    <!-- ── Signed-in state ── -->
+                    <StackLayout IsVisible="{Binding IsAuthenticated}">
+                        <Label Text="{Binding AccountStatus}" Style="{StaticResource BodyText}"/>
+                        <Label Text="{Binding CurrentUserEmail, StringFormat='User: {0}'}" Style="{StaticResource CaptionText}" Margin="0,4,0,0"/>
+                        <Label Text="Basic mode enabled" Style="{StaticResource CaptionText}"/>
+
+                        <Button Text="Log Out" Command="{Binding LogoutCommand}"
+                                Style="{StaticResource SecondaryButton}" Margin="0,12,0,0"/>
+                    </StackLayout>
+
+                    <!-- ── Not signed-in state ── -->
+                    <StackLayout IsVisible="{Binding IsAuthenticated, Converter={StaticResource InverseBoolConverter}}" Spacing="10">
+                        <Label Text="{Binding AccountStatus}" Style="{StaticResource BodyText}"/>
+
+                        <!-- Email field (shared between login & sign-up) -->
+                        <Entry Placeholder="Email address" Text="{Binding LoginEmail}" Keyboard="Email"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurfaceElevated}}"
+                               TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+
+                        <!-- Login form -->
+                        <StackLayout IsVisible="{Binding IsSignUpMode, Converter={StaticResource InverseBoolConverter}}" Spacing="8">
+                            <Entry Placeholder="Password" Text="{Binding LoginPassword}" IsPassword="True"
+                                   BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurfaceElevated}}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                            <Button Text="Log In" Command="{Binding LoginCommand}" Style="{StaticResource PrimaryButton}"/>
+                        </StackLayout>
+
+                        <!-- Sign-up form -->
+                        <StackLayout IsVisible="{Binding IsSignUpMode}" Spacing="8">
+                            <Entry Placeholder="Password (min 6 chars)" Text="{Binding RegisterPassword}" IsPassword="True"
+                                   BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurfaceElevated}}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                            <Entry Placeholder="Confirm password" Text="{Binding RegisterConfirmPassword}" IsPassword="True"
+                                   BackgroundColor="{AppThemeBinding Light={StaticResource LightSurface}, Dark={StaticResource DarkSurfaceElevated}}"
+                                   TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource DarkTextPrimary}}"/>
+                            <Button Text="Create Account" Command="{Binding SignUpCommand}" Style="{StaticResource PrimaryButton}"/>
+                        </StackLayout>
+
+                        <!-- Toggle login / sign-up -->
+                        <Button Text="{Binding AuthModeLabel}" Command="{Binding ToggleAuthModeCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="13"
+                                HorizontalOptions="Center"/>
+
+                        <Label Text="Sign in to sync your account across devices."
+                               Style="{StaticResource CaptionText}" Margin="0,6,0,0"
+                               HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+
             <!-- Appearance -->
             <Frame Style="{StaticResource Card}" Margin="0,0,0,16">
                 <StackLayout>

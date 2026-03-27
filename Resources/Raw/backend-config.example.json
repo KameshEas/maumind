@@ -1,0 +1,4 @@
+{
+  "_readme_": "Copy this file to the MauMind app-data folder (see BackendConfig.ConfigFilePath()). Fill in your real keys. Never commit this file with real keys to version control.",
+  "FirebaseWebApiKey": ""
+}

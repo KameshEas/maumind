@@ -1,6 +1,7 @@
 using MauMind.App.Models;
 using MauMind.App.Services;
 using MauMind.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Maui.Controls;
 
 namespace MauMind.App.Views;
@@ -170,6 +171,143 @@ public partial class ChatPage : ContentPage
             
             stack.Children.Add(contentGrid);
             stack.Children.Add(footerStack);
+
+            // Render provenance / sources for assistant messages
+            if (!isUser && message.Provenance != null && message.Provenance.Count > 0)
+            {
+                var sourcesToggle = new Button
+                {
+                    Text = "Sources ▸",
+                    FontSize = 12,
+                    BackgroundColor = Colors.Transparent,
+                    TextColor = Colors.Gray,
+                    HorizontalOptions = LayoutOptions.Start,
+                    Padding = new Thickness(0)
+                };
+
+                var sourcesPanel = new StackLayout
+                {
+                    IsVisible = false,
+                    Spacing = 6,
+                    Margin = new Thickness(0, 6, 0, 0)
+                };
+
+                // Populate provenance entries
+                foreach (var p in message.Provenance)
+                {
+                    var title = string.IsNullOrWhiteSpace(p.DocumentTitle) ? "(untitled)" : p.DocumentTitle;
+                    var conf = Math.Round(p.Score, 3);
+
+                    var itemFrame = new Frame
+                    {
+                        CornerRadius = 8,
+                        Padding = new Thickness(10, 8),
+                        BackgroundColor = Color.FromArgb("#F6F6F6"),
+                        HasShadow = false
+                    };
+
+                    var itemStack = new StackLayout { Spacing = 6 };
+                    var headerRow = new HorizontalStackLayout { Spacing = 8, VerticalOptions = LayoutOptions.Center };
+                    headerRow.Children.Add(new Label { Text = $"{title}", FontSize = 12, TextColor = Colors.Black, FontAttributes = FontAttributes.Bold });
+                    headerRow.Children.Add(new Label { Text = $"{p.Source}", FontSize = 11, TextColor = Colors.Gray });
+                    headerRow.Children.Add(new Label { Text = $"({conf})", FontSize = 11, TextColor = Colors.Gray });
+
+                    // Action buttons: open document, copy excerpt, share
+                    var actionsRow = new HorizontalStackLayout { Spacing = 8, HorizontalOptions = LayoutOptions.EndAndExpand };
+
+                    var openBtn = new Button
+                    {
+                        Text = "📄",
+                        FontSize = 14,
+                        BackgroundColor = Colors.Transparent,
+                        WidthRequest = 34,
+                        HeightRequest = 34,
+                        CornerRadius = 8
+                    };
+                    openBtn.Clicked += async (s, e) =>
+                    {
+                        try
+                        {
+                            if (p.DocumentId > 0)
+                            {
+                                var editor = ActivatorUtilities.CreateInstance<NoteEditorPage>(App.Services, p.DocumentId);
+                                await Navigation.PushModalAsync(editor);
+                            }
+                            else
+                            {
+                                await DisplayAlert("Memory", "This source is from your memory (no document to open).", "OK");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            await DisplayAlert("Error", ex.Message, "OK");
+                        }
+                    };
+
+                    var copyBtn = new Button
+                    {
+                        Text = "📋",
+                        FontSize = 14,
+                        BackgroundColor = Colors.Transparent,
+                        WidthRequest = 34,
+                        HeightRequest = 34,
+                        CornerRadius = 8
+                    };
+                    copyBtn.Clicked += async (s, e) =>
+                    {
+                        try
+                        {
+                            await Clipboard.SetTextAsync(p.Excerpt ?? string.Empty);
+                            await _animationService?.PulseAsync(copyBtn);
+                        }
+                        catch { }
+                    };
+
+                    var shareBtn = new Button
+                    {
+                        Text = "🔗",
+                        FontSize = 14,
+                        BackgroundColor = Colors.Transparent,
+                        WidthRequest = 34,
+                        HeightRequest = 34,
+                        CornerRadius = 8
+                    };
+                    shareBtn.Clicked += async (s, e) =>
+                    {
+                        try
+                        {
+                            var share = App.Services.GetRequiredService<IShareService>();
+                            var textToShare = $"{title}:\n\n{p.Excerpt}";
+                            await share.ShareTextAsync(textToShare, title);
+                        }
+                        catch (Exception ex)
+                        {
+                            await DisplayAlert("Share Error", ex.Message, "OK");
+                        }
+                    };
+
+                    actionsRow.Children.Add(openBtn);
+                    actionsRow.Children.Add(copyBtn);
+                    actionsRow.Children.Add(shareBtn);
+
+                    var excerpt = p.Excerpt ?? string.Empty;
+                    itemStack.Children.Add(headerRow);
+                    itemStack.Children.Add(new Label { Text = excerpt, FontSize = 12, TextColor = Colors.Gray, LineBreakMode = LineBreakMode.WordWrap });
+                    itemStack.Children.Add(actionsRow);
+
+                    itemFrame.Content = itemStack;
+                    sourcesPanel.Children.Add(itemFrame);
+                }
+
+                sourcesToggle.Clicked += (s, e) =>
+                {
+                    sourcesPanel.IsVisible = !sourcesPanel.IsVisible;
+                    sourcesToggle.Text = sourcesPanel.IsVisible ? "Sources ▾" : "Sources ▸";
+                };
+
+                stack.Children.Add(sourcesToggle);
+                stack.Children.Add(sourcesPanel);
+            }
             bubble.Content = stack;
             
             MessagesStack.Children.Add(bubble);
